@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Container, Heading, Box, Text, Button } from '@chakra-ui/react';
 import NotesApi from '../api/notesApi';
 
-const api = new NotesApi('/api');
+const api = new NotesApi('http://192.168.2.22:3030/api');
 
 const NotesListPage = () => {
   const [notes, setNotes] = useState([]);
