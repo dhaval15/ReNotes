@@ -48,6 +48,7 @@ class NotesApi {
       const response = await fetch(`${this.apiBaseUrl}/notes/${id}`);
       const data = await response.json();
       console.log('Note:', data);
+			return data;
     } catch (error) {
       console.error('Error getting note:', error);
     }
