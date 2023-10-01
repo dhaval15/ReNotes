@@ -9,7 +9,8 @@ function extractProperties(text) {
 
     for (const line of frontMatterLines) {
       const [key, value] = line.split(':').map((str) => str.trim());
-      frontMatter[key] = value;
+			if (value != '')
+      	frontMatter[key] = value;
     }
 
     return frontMatter;
