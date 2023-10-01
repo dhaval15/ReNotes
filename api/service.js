@@ -66,6 +66,8 @@ async function getCollectionByName(name) {
       nodes.push({
         id: nodeId,
 				... frontMatter,
+				tags: frontMatter['tags']?.split(' '),
+				collection: name,
 				outgoing,
       });
     }
