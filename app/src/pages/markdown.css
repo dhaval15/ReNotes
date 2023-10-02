@@ -1,0 +1,106 @@
+/* Style for the Markdown container */
+.markdown {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 20px;
+  /* background-color: #f9f9f9; */
+  /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+}
+
+.markdown h1 {
+  font-size: 28px;
+  margin-top: 30px;
+}
+
+.markdown h2 {
+  font-size: 24px;
+  margin-top: 25px;
+}
+
+.markdown h3 {
+  font-size: 20px;
+  margin-top: 20px;
+}
+
+.markdown h4 {
+  font-size: 18px; /* Adjust the size as needed */
+  font-weight: bold;
+  margin-top: 18px;
+}
+
+.markdown h5 {
+  font-size: 16px; /* Adjust the size as needed */
+  font-weight: bold;
+  margin-top: 16px;
+}
+
+.markdown h6 {
+  font-size: 14px; /* Adjust the size as needed */
+  font-weight: bold;
+  margin-top: 14px;
+}
+
+/* Style for paragraphs */
+.markdown p {
+  font-size: 16px;
+  margin-top: 16px;
+	white-space: pre-wrap;
+	text-align: justify;
+}
+
+/* Style for links */
+.markdown a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.markdown a:hover {
+  text-decoration: underline;
+}
+
+/* Style for code blocks */
+.markdown pre {
+  background-color: #f5f5f5;
+  padding: 10px;
+  border-radius: 5px;
+  overflow: auto;
+}
+
+.markdown code {
+  font-family: 'Courier New', Courier, monospace;
+}
+
+/* Style for lists */
+.markdown ul, .markdown ol {
+  margin-top: 16px;
+  padding-left: 20px;
+}
+
+.markdown li {
+  font-size: 16px;
+  margin-top: 8px;
+}
+
+/* Style for blockquotes */
+.markdown blockquote {
+  border-left: 3px solid #007bff;
+  padding-left: 15px;
+  font-style: italic;
+  margin-top: 20px;
+}
+
+/* Style for horizontal rules */
+.markdown hr {
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 20px 0;
+}
+
+/* Style for images */
+.markdown img {
+  max-width: 100%;
+  height: auto;
+  margin-top: 16px;
+}

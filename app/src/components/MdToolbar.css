@@ -1,0 +1,25 @@
+.md-toolbar {
+  display: flex;
+  background-color: #ffffff;
+  border-radius: 5px;
+  padding: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.md-toolbar-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  outline: none;
+  transition: background-color 0.2s ease;
+}
+
+.md-toolbar-button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.md-toolbar-icon {
+  width: 24px;
+  height: 24px;
+}

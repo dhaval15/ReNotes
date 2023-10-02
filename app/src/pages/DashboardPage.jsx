@@ -17,15 +17,24 @@ import {
   Spacer,
   VStack,
   Text,
-  StackDivider,
 	Heading,
 } from '@chakra-ui/react';
+import '../App.css';
 import Icon from '@oovui/react-feather-icons';
 import NodeTile from '../components/NodeTile';
-import ReNotesApi from '../api/ReNotesApi';
-import '../App.css';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchCollectionAsync, fetchCollectionsAsync } from '../reducers/collectionsReducer';
 
-function CollectionList({ collections, selectCollection, selectedCollection }) {
+function CollectionList() {
+	const dispatch = useDispatch();
+	const collections = useSelector((state) => state.collections.data);
+	const selected = useSelector((state) => state.collections.selected);
+
+  const selectCollection = (collection) => {
+  	dispatch(fetchCollectionAsync(collection));
+		// if (!isWideScreen)
+  //   	onClose();
+  };
   return (
     <VStack
       align="start"
@@ -38,7 +47,7 @@ function CollectionList({ collections, selectCollection, selectedCollection }) {
 					fontWeight="semibold"
           onClick={() => selectCollection(collection)}
           cursor="pointer"
-					backgroundColor={collection === selectedCollection ? 'gray.200' : 'transparent'}
+					backgroundColor={collection === selected.name ? 'gray.200' : 'transparent'}
 					py={2}
 					px={4}
         >
@@ -49,17 +58,13 @@ function CollectionList({ collections, selectCollection, selectedCollection }) {
   );
 }
 
-function CollectionSidebar({ collections, selectCollection, selectedCollection, isOpen}) {
+function CollectionSidebar({ isOpen }) {
 	if (!isOpen)
 		return (<> </>)
   return (
     <Box position="fixed" h="100vh" w={300} bg="gray.50">
 			<Heading as="h3" p={4}>Collections</Heading>
-      <CollectionList
-        collections={collections}
-        selectCollection={selectCollection}
-        selectedCollection={selectedCollection}
-      />
+      <CollectionList/>
     </Box>
   );
 }
@@ -68,9 +73,6 @@ function CollectionsDrawer({
   isOpen,
   onOpen,
   onClose,
-  collections,
-  selectCollection,
-  selectedCollection,
 }) {
   return (
     <Drawer placement="left" onClose={onClose} isOpen={isOpen}>
@@ -79,11 +81,7 @@ function CollectionsDrawer({
 					<DrawerCloseButton />
 					<DrawerHeader>Collection</DrawerHeader>
 					<DrawerBody>
-						<CollectionList
-							collections={collections}
-							selectCollection={selectCollection}
-							selectedCollection={selectedCollection}
-						/>
+						<CollectionList/>
 					</DrawerBody>
 				</DrawerContent>
       </DrawerOverlay>
@@ -92,8 +90,9 @@ function CollectionsDrawer({
 }
 
 
-function MainView({ collection, nodes, isOpen, onOpen, onClose }) {
+function MainView({ isOpen, onOpen, onClose }) {
 	const [search, setSearch] = useState('');
+	const selected = useSelector((state) => state.collections.selected);
 	const [filteredNodes, setFilteredNodes] = useState(null);
 	useEffect(() => {
 		if (search == ''){
@@ -101,7 +100,7 @@ function MainView({ collection, nodes, isOpen, onOpen, onClose }) {
 		}
 		else{
 			const regexp = new RegExp(search, 'i')
-			setFilteredNodes(nodes.filter((node) => regexp.test(node.title)));
+			setFilteredNodes(selected.nodes.filter((node) => regexp.test(node.title)));
 		}
 	}, [search]);
   return (
@@ -135,7 +134,7 @@ function MainView({ collection, nodes, isOpen, onOpen, onClose }) {
 				className="hide-scroll"
 				spacing={4}
 			>
-				{(filteredNodes ?? nodes).map(node => (
+				{(filteredNodes ?? selected?.nodes ?? []).map(node => (
 					<NodeTile node={node}/> 
 				))}
 			</VStack>
@@ -146,10 +145,6 @@ function MainView({ collection, nodes, isOpen, onOpen, onClose }) {
 function DashboardPage() {
 	const [isWideScreen] = useMediaQuery('(min-width: 769px)');
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [collections, setCollections] = useState([]);
-  const [selectedCollection, setSelectedCollection] = useState(null);
-  const [nodes, setNodes] = useState([]);
-  const api = new ReNotesApi('http://192.168.2.76:3030'); // Replace with your API base URL
 
 	useEffect(() => {
 		if (isWideScreen){
@@ -159,39 +154,16 @@ function DashboardPage() {
 		}
 	}, [isWideScreen]);
 
-  useEffect(() => {
-    // Fetch collections when the component mounts
-    api.getCollections()
-      .then(data => {
-				setCollections(data);
-				if (selectedCollection == null) {
-					setSelectedCollection(data[0]);
-				}
-			}).catch(error => console.error(error));
-  }, []);
+	const dispatch = useDispatch();
 
-  useEffect(() => {
-    // Fetch nodes for the selected collection
-    if (selectedCollection) {
-      api.getCollection(selectedCollection)
-        .then(data => setNodes(data.nodes))
-        .catch(error => console.error(error));
-    }
-  }, [selectedCollection]);
-
-  const selectCollection = (collection) => {
-    setSelectedCollection(collection);
-		if (!isWideScreen)
-    	onClose();
-  };
+	useEffect(() => {
+		dispatch(fetchCollectionsAsync());
+	});
 
   return (
 		<Box position="relative">
       {isWideScreen ? (
         <CollectionSidebar
-          collections={collections}
-          selectCollection={selectCollection}
-          selectedCollection={selectedCollection}
           onClose={() => onClose()}
 					isOpen={isOpen}
         />
@@ -201,16 +173,11 @@ function DashboardPage() {
             isOpen={isOpen}
             onOpen={() => onOpen()}
             onClose={() => onClose()}
-            collections={collections}
-            selectCollection={selectCollection}
-            selectedCollection={selectedCollection}
           />
         </>
       )}
       <Flex ml={isWideScreen && isOpen ? 300 : 0} p={0} overflowY="auto">
 				<MainView 
-					collection={selectedCollection} 
-					nodes={nodes} 
 					onOpen={() => onOpen()}
 					onClose={() => onClose()}
 					isOpen={isOpen}/>
