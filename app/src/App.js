@@ -7,11 +7,12 @@ import { Provider } from 'react-redux';
 import store from './store';
 
 import {
-  createBrowserRouter,
+  createMemoryRouter,
+  createHashRouter,
   RouterProvider,
 } from "react-router-dom";
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   { path: "/", Component: DashboardPage },
   { path: "/:collection/:id", Component: NodePage },
   { path: "/:collection/:id/edit", Component: EditNotePage },

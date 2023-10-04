@@ -42,3 +42,15 @@
 	 border: none;
 	 scrollbar-width: none;
 }
+
+.node-link {
+  text-decoration: none; 
+  color: #483248;
+	font-weight: 500;
+  transition: color 0.3s, text-decoration 0.3s; 
+  
+}
+.node-link:hover {
+	color: #3A283A; 
+	text-decoration: underline; 
+}

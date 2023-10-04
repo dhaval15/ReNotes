@@ -12,16 +12,6 @@ export const fetchNodeAsync = createAsyncThunk('editNode/fetchNote', async (payl
 });
 
 export const updateNoteAsync = createAsyncThunk('editNote/updateNote', async (_, thunkApi) => {
-	const state = thunkApi.getState().editNote;
-	const note = state.note;
-	const content = state.content;
-	const sceneIndex = state.sceneIndex;
-	if (note != null && sceneIndex != null && content != null) {
-		const sceneId = note.scenes[sceneIndex].id;
-		const response = await NoteApi.updateNote(note.id, sceneId, {content});
-		return response;
-	}
-  throw 'Already up to date';
 });
 
 const editNoteSlice = createSlice({
@@ -60,7 +50,6 @@ const editNoteSlice = createSlice({
       .addCase(fetchNodeAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.node = action.payload;
-				state.sceneIndex = 0;
       })
       .addCase(fetchNodeAsync.rejected, (state, action) => {
         state.status = 'failed';
@@ -71,13 +60,6 @@ const editNoteSlice = createSlice({
       })
       .addCase(updateNoteAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
-				state.content = null;
-        state.note.scenes[state.sceneIndex] = action.payload;
-        state.note = {
-					... state.note,
-					scenes: state.note.scenes,
-				};
-				//state.lastSave = new Date();
       })
       .addCase(updateNoteAsync.rejected, (state, action) => {
         state.status = 'failed';

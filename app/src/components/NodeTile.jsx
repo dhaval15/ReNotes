@@ -1,28 +1,27 @@
 import React from 'react';
-import { 
+import {
 	Text,
-	Link,
 	Wrap,
 	VStack,
 } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
 
 const NodeTile = ({ node }) => {
 	return (
 		<VStack
 			key={node.id}
 			align="start">
-			<Link 
-				href={`/${node.collection}/${node.id}`}
+			<Link
+				to={`/${node.collection}/${node.id}`}
+				className="node-link"
 				style={{
-					color: '#483248',
 					fontSize: 24,
-					fontWeight: 500,
 				}}>
 				{node.title}
 			</Link>
 			<Wrap>
 				{node.tags?.map(tag => (
-					<Tag tag={tag}/> 
+					<Tag tag={tag} />
 				))}
 			</Wrap>
 		</VStack>
