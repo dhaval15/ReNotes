@@ -11,6 +11,8 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.static('/static'))
 
+var port = process.env.PORT || '3030';
+
 const collectionController = require('./controllers/collection');
 
 app.get('/api/collections', collectionController.getCollections);
@@ -42,4 +44,6 @@ app.use(function(err, req, res, next) {
 	res.render('error');
 });
 
-module.exports = app;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
