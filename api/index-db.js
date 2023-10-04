@@ -75,7 +75,13 @@ class IndexDB {
 
 	async nodesWhere(where) {
 		const selectNodesQuery = `SELECT * FROM nodes WHERE ${where}`;
-		return this.queryDatabase(selectNodesQuery);
+		const rows =  await this.queryDatabase(selectNodesQuery);
+		return rows.map((e) => {
+			return {
+				... e,
+				tags: e.tags?.split(' '),
+			};
+		});
 	}
 
 	deleteNode(id) {
