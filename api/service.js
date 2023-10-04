@@ -12,7 +12,8 @@ const ingester = require('./ingester');
 
 async function getAllCollections() {
 	try {
-		const collections = await fs.readdir(rootDir);
+		const files = await fs.readdir(rootDir, {withFileTypes: true});
+		const collections = files.filter((file) => file.isDirectory()).map((dir) => dir.name);
 		return collections;
 	} catch (err) {
 		throw err;
