@@ -1,7 +1,8 @@
 const service = require('../service');
+const indexDB = require('../index-db');
 
 // GET all collections
-const getCollections = async (req, res) => {
+const getCollections = async (_, res) => {
   try {
     const collections = await service.getAllCollections();
     res.json(collections);
@@ -44,17 +45,30 @@ const getCollection = async (req, res) => {
 
   try {
     const collection = await service.getCollectionByName(name);
-    res.json(collection);
+		res.json(collection);
   } catch (err) {
 		console.log(err);
     res.status(500).json({ error: 'Unable to fetch collection' });
   }
 };
 
+// POST regenerate index for a collection
+const regenerateIndex = async (req, res) => {
+  const { name } = req.params;
+  try {
+		await service.regenerateIndex(name);
+    res.json({ message: 'Database regenerated successfully.' });
+  } catch (error) {
+    res.status(500).json({ error: 'Database regeneration failed.' });
+  }
+};
+
+
 module.exports = {
   getCollections,
   createCollection,
   deleteCollection,
   getCollection,
+  regenerateIndex,
 };
 
