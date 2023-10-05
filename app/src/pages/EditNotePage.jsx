@@ -19,10 +19,14 @@ const EditNotePage = () => {
     dispatch(fetchNodeAsync({collection, id}));
   }, [dispatch, id, collection]);
 
+	const onSave = (text) => {
+    dispatch(setContent(text));
+	};
+
 	return (
     <>
 			{ node?.content != null ? 
-				<Editor initialContent={node.content} />
+				<Editor initialContent={node.content} onSave={onSave}/>
 				: <div> 'Loading' </div>
 			}
     </>

@@ -1,29 +1,76 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Flex } from '@chakra-ui/react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import { Flex, useDisclosure } from '@chakra-ui/react';
 import SimpleMdeReact from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 import MdToolbar from './MdToolbar';
 import "./Editor.css";
+import SelectNodeDialog from './SelectNodeDialog';
+import debounce from 'lodash/debounce';
 
 const MemoMde = React.memo(SimpleMdeReact);
 
-const Editor = ({initialContent}) => {
-	const editor = useRef(null);
-	const onChange = (text) => {
+const Editor = ({ initialContent, onSave }) => {
+	const dialogRef = useRef(null);
+	useEffect(() => {
+		console.log(dialogRef.current);
+	},[dialogRef.current]);
+	return (
+		<>
+			<SelectNodeDialog dialogRef={dialogRef}/>
+			<EditorArea 
+				dialogRef={dialogRef} 
+				onSave={onSave}
+				initialContent={initialContent}/>
+		</>
+	)
+}
 
-	};
+function EditorArea({ dialogRef, initialContent, onSave }) {
+	const editor = useRef(null);
+	const TYPING_INTERVAL = 2000;
+
+	const debouncedSave = React.useRef(
+		debounce((text) => {
+			onSave(text);
+		}, TYPING_INTERVAL)
+	).current;
+
+	const onChange = (text) => {
+		debouncedSave(text);
+	}
+
+	React.useEffect(() => {
+		return () => {
+			debouncedSave.cancel();
+		};
+	}, [debouncedSave]);
+
+	const extraKeys = React.useMemo(() => {
+		return {
+			'Ctrl-F': async (cm) => {
+				console.log(dialogRef);
+				const node = await dialogRef.current.openAsync();
+				const selection = cm.getSelection().trim();
+				const inline = selection != '' ? selection : node.title;
+				const url = `[${inline}](id:${node.id})`;
+				cm.replaceSelection(url);
+			},
+		};
+	}, []);
+
 
 	return (
-		<Flex height="100vh" direction="column">
+		<>
+			<Flex height="100vh" direction="column">
 				<MdToolbar height="8em" editor={editor} />
-				<Flex 
+				<Flex
 					flex={1}
 					style={{
-						justifyContent:"center",
-						width:"100%",
+						justifyContent: "center",
+						width: "100%",
 						alignItems: "center",
 						flex: 1,
-						height:"100%",
+						height: "100%",
 						overflowY: 'auto',
 					}}
 					px="0em"
@@ -37,23 +84,27 @@ const Editor = ({initialContent}) => {
 						pt='8em'
 						ref={editor}
 						getCodemirrorInstance={(cm) => {
-							if (editor.current)
+							if (editor.current) {
 								editor.current.cm = cm
+							}
 						}}
 						getMdeInstance={(e) => {
 							if (editor.current)
 								editor.current.mde = e
 						}}
 						options={{
-							//lineNumbers: true,
 							scrollbarStyle: null,
 							status: false,
 							toolbar: [],
+							autofocus: true,
+							spellChecker: false,
 						}}
-						value={initialContent} 
-						onChange={onChange} />
+						extraKeys={extraKeys}
+						onChange={onChange}
+						value={initialContent}/>
+				</Flex>
 			</Flex>
-		</Flex>
+		</>
 	)
 }
 

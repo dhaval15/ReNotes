@@ -104,8 +104,9 @@ const MdToolbar = ({ editor }) => {
           key={button.name}
           aria-label={button.name}
 					mr={1}
+					size="sm"
           icon={ button.text != null ?
-						<Text fontSize={24}> {button.text} </Text>
+						<Text fontSize={20}> {button.text} </Text>
 						: <Icon type={button.icon}/>
           }
           onClick={() => handleButtonClick(button.action)}
@@ -117,8 +118,9 @@ const MdToolbar = ({ editor }) => {
           key={button.name}
           aria-label={button.name}
 					mr={1}
+					size="sm"
           icon={ button.text != null ?
-						<Text fontSize={24}> {button.text} </Text>
+						<Text fontSize={20}> {button.text} </Text>
 						: <Icon type={button.icon}/>
           }
           onClick={() => handleButtonClick(button.action)}
