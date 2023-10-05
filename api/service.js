@@ -52,9 +52,8 @@ async function deleteCollection(collectionName, drop) {
 
 // Function to get a collection by name
 async function getCollectionByName(name) {
-	const filter = `collection = '${name}'`;
-	const nodes = await indexDb.nodesWhere(filter);
-	const links = await indexDb.linksWhere(filter);
+	const nodes = await indexDb.nodesWhere(`collection = '${name}' ORDER BY updatedOn DESC`)
+	const links = await indexDb.linksWhere(`collection = '${name}'`);
 	return {
 		name: name,
 		nodes: nodes,
@@ -89,7 +88,7 @@ async function getNode(collectionName, nodeId) {
 async function createNode(collectionName, title, tags, content, extras) {
 	const nodeId = uuidv4();
 	const nodePath = path.join(rootDir, collectionName, `${nodeId}.md`);
-	const createdOn = new Date().toISOString();
+	const createdOn = new Date().toISOString().slice(0, 10);
 	const updatedOn = createdOn;
 
 	const frontMatter = {
@@ -111,7 +110,16 @@ async function createNode(collectionName, title, tags, content, extras) {
 
 	try {
 		await fs.writeFile(nodePath, nodeContent, 'utf-8');
-		return { id: nodeId, title, tags, createdOn, updatedOn, ...extras, content };
+		return { 
+			id: nodeId,
+			collection: collectionName,
+			title,
+			tags,
+			createdOn,
+			updatedOn,
+			...extras,
+			content,
+		};
 	} catch (err) {
 		throw err;
 	}
