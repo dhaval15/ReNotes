@@ -22,7 +22,14 @@ export const createCollectionAsync = createAsyncThunk('collection/createCollecti
   return name;
 });
 
-export const deleteNoteAsync = createAsyncThunk('notes/deleteNote', async (payload) => {
+export const createNodeAsync = createAsyncThunk('collection/createNode', async (payload, _thunkApi) => {
+	const state = _thunkApi.getState().collections;
+	const selected = state.selected;
+  const response = await api.createNode(selected.name, payload.title, payload.tags, '', {});
+  return response;
+});
+
+export const deleteCollectionAsync = createAsyncThunk('collection/deleteCollection', async (payload) => {
   await api.deleteCollection(payload.name, payload.drop);
   return payload.name;
 });
@@ -34,8 +41,18 @@ const collectionsSlice = createSlice({
 		status: 'idle', 
 		error: null,
 		selected: null,
+		loaded: false,
+		isDrawerOpen: false,
+		isWideScreen: false,
 	},
-  reducers: {},
+	reducers: {
+		openDrawer: (state, action) => {
+			state.isDrawerOpen = action.payload;
+		},
+		setWideScreen: (state, action) => {
+			state.isWideScreen = action.payload;
+		},
+	},
   extraReducers: (builder) => {
     builder
       .addCase(fetchCollectionsAsync.pending, (state) => {
@@ -45,6 +62,7 @@ const collectionsSlice = createSlice({
         state.status = 'succeeded';
         state.data = action.payload.collections;
         state.selected = action.payload.selected;
+				state.loaded = true;
       })
       .addCase(fetchCollectionsAsync.rejected, (state, action) => {
         state.status = 'failed';
@@ -56,6 +74,9 @@ const collectionsSlice = createSlice({
       .addCase(fetchCollectionAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.selected = action.payload;
+				if (!state.isWideScreen) {
+					state.isDrawerOpen = false
+				}
       })
       .addCase(fetchCollectionAsync.rejected, (state, action) => {
         state.status = 'failed';
@@ -64,11 +85,22 @@ const collectionsSlice = createSlice({
       .addCase(createCollectionAsync.fulfilled, (state, action) => {
         state.data = [...state.data, action.payload]; 
       })
-      .addCase(deleteNoteAsync.fulfilled, (state, action) => {
+      .addCase(createNodeAsync.fulfilled, (state, action) => {
+				state.selected = {
+					...state.selected,
+					nodes: [action.payload, ... state.selected.nodes],
+				};
+      })
+      .addCase(deleteCollectionAsync.fulfilled, (state, action) => {
         const deletedId = action.payload;
         state.data = state.data.filter((collection) => collection.id !== deletedId); 
       });
   },
 });
+
+export const {
+	openDrawer,
+	setWideScreen,
+} = collectionsSlice.actions;
 
 export default collectionsSlice.reducer;
