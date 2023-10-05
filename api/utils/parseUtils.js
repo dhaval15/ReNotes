@@ -38,7 +38,9 @@ function serializeProperties(frontMatter) {
   let yamlFrontMatter = '---\n';
 
   for (const key of Object.keys(frontMatter)) {
-    yamlFrontMatter += `${key}: ${frontMatter[key]}\n`;
+		const value = (key == 'tags' ? frontMatter[key].join(' '): frontMatter[key]).trim();
+		if (value != '')
+    	yamlFrontMatter += `${key}: ${value}\n`;
   }
 
   yamlFrontMatter += '---\n';
