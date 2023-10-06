@@ -49,9 +49,18 @@ function DrawerX({ isOpen, onClose, side, left }) {
 	);
 }
 
-function MainView({ isOpen, onOpen, onClose, left, body, header }) {
+function MainView({ isOpen, onOpen, onClose, left, sticky, body, header }) {
+	const stickyProps = sticky ? {
+		height: "100vh", 
+		overFlowY: "auto",
+	} : {};
 	return (
-		<Stack ml="0.5em" p={4} alignItems="center" width="100%"maxWidth="700px">
+		<Stack
+			{...stickyProps}
+			mx="0.5em" p={4} 
+			alignItems="center" 
+			width="100%"
+			maxWidth="700px">
 			<Flex width="100%" alignItems="center">
 				{(left &&
 					<IconButton
@@ -72,7 +81,7 @@ function MainView({ isOpen, onOpen, onClose, left, body, header }) {
 	);
 }
 
-function DrawerContainer({ left = true, body, side, header }) {
+function DrawerContainer({ left = true, sticky = false, body, side, header }) {
 	const [isWideScreen] = useMediaQuery('(min-width: 769px)');
 	const {isOpen, onOpen, onClose} = useDisclosure();
 
@@ -81,6 +90,7 @@ function DrawerContainer({ left = true, body, side, header }) {
 		mr: left ? 0 : (isWideScreen && isOpen ? 300 : 0),
 		p: 0,
 		overflowY: 'auto',
+		overflowX: 'hidden',
 		alignItems: 'center',
 	};
 
@@ -100,6 +110,7 @@ function DrawerContainer({ left = true, body, side, header }) {
 					onClose={onClose}
 					body={body}
 					left={left}
+					sticky={sticky}
 					header={header} />
 			</Stack>
 		</Box>

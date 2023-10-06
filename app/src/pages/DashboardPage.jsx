@@ -92,7 +92,7 @@ function DashboardPage() {
 				</>
 			}
 			body={
-				<VStack width="100%" align="start">
+				<VStack flex={1} overflowY="auto" width="100%" align="start">
 					<VStack
 						mt="1em"
 						align="start"
@@ -106,8 +106,9 @@ function DashboardPage() {
 						))}
 					</VStack>
 				</VStack>}
-			side={<CollectionList pt={4} />}
+			side={<CollectionList pt={4}/>}
 			left={true}
+			sticky={true}
 		/>
 	)
 }
