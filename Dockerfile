@@ -55,4 +55,4 @@ RUN mkdir -p ${RENOTES_DATA_DIR} && \
 EXPOSE 3030
 
 # Set the entry point for the container to start the Express.js server
-CMD ["node", "api/bin/www"]
+CMD ["node", "api/index"]
