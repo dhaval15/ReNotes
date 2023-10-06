@@ -87,8 +87,11 @@ async function getNode(collectionName, nodeId) {
 // Function to create a new node
 async function createNode(collectionName, title, tags, content, extras) {
 	const nodeId = uuidv4();
-	const nodePath = path.join(rootDir, collectionName, `${nodeId}.md`);
-	const createdOn = new Date().toISOString().slice(0, 10);
+	const today = new Date();
+	const slug = parseUtils.generateSlug(title, today);
+	const file = `${slug}.md`;
+	const nodePath = path.join(rootDir, collectionName, file);
+	const createdOn = today.toISOString().slice(0, 10);
 	const updatedOn = createdOn;
 
 	const frontMatter = {
@@ -128,7 +131,9 @@ async function createNode(collectionName, title, tags, content, extras) {
 
 // Function to delete a node by ID
 async function deleteNode(collectionName, nodeId) {
-	const nodePath = path.join(rootDir, collectionName, `${nodeId}.md`);
+	const nodes = await indexDb.nodesWhere(`collection = '${collectionName}' AND id = '${nodeId}'`);
+	const node = nodes[0];
+	const nodePath = path.join(rootDir, collectionName, node.file);
 
 	try {
 		await fs.unlink(nodePath);
@@ -139,7 +144,9 @@ async function deleteNode(collectionName, nodeId) {
 
 // Function to update a node by ID
 async function updateNode(collectionName, nodeId, updateData, content) {
-	const nodePath = path.join(rootDir, collectionName, `${nodeId}.md`);
+	const nodes = await indexDb.nodesWhere(`collection = '${collectionName}' AND id = '${nodeId}'`);
+	const node = nodes[0];
+	const nodePath = path.join(rootDir, collectionName, node.file);
 
 	try {
 		const text = await fs.readFile(nodePath, 'utf-8');
@@ -147,9 +154,11 @@ async function updateNode(collectionName, nodeId, updateData, content) {
 		const newContent = content ?? parseUtils.extractProperties(text);
 
 		// Merge the updateData with existing front matter
+		const updatedOn = new Date().toISOString().slice(0, 10);
 		const updatedFrontMatter = {
 			...frontMatter,
-			...updateData
+			...updateData,
+			updatedOn,
 		};
 		const updatedYamlFrontMatter = parseUtils.serializeProperties(updatedFrontMatter);
 		const nodeContent = updatedYamlFrontMatter + `${newContent}\n`;

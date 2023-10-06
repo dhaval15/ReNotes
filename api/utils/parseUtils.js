@@ -1,3 +1,15 @@
+// Function to create slug
+function generateSlug(title, date) {
+  const timestamp = date.toISOString().replace(/[-T:Z.]/g, '').slice(0, 14);
+
+  const titleSlug = title
+    .toLowerCase()
+    .replace(/\s+/g, '_')
+    .replace(/[^a-z0-9_]/g, '');
+
+  return `${timestamp}T-${titleSlug}`;
+}
+
 // Function to extract front matter from content
 function extractProperties(text) {
   const frontMatterRegex = /^---\n([\s\S]+?)\n---/;
