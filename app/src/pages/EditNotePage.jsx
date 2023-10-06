@@ -33,7 +33,7 @@ const EditNotePage = () => {
 	return (
 		<>
 			<ToastContainer
-				onAlert={() => useSelector((state) => state.editNote.alert)}
+				alertSelector={(state) => state.editNote.alert}
 				onClearMessage={() => dispatch(clearAlert())}
 			/>
 			{node?.content != null ?

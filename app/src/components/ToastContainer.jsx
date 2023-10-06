@@ -1,9 +1,10 @@
 import React, { useEffect }from 'react';
 import { useToast } from '@chakra-ui/react'
+import { useSelector } from 'react-redux';
 
-export function ToastContainer ({onAlert, onClearMessage}) {
+export function ToastContainer ({alertSelector, onClearMessage}) {
 	const toast = useToast();
-	const alert = onAlert();
+	const alert = useSelector(alertSelector);
 	const id = 'alert-id';
 	useEffect(() => {
 		if (alert != null && !toast.isActive(id))
