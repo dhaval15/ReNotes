@@ -91,7 +91,7 @@ async function createNode(collectionName, title, tags, content, extras) {
 	const slug = parseUtils.generateSlug(title, today);
 	const file = `${slug}.md`;
 	const nodePath = path.join(rootDir, collectionName, file);
-	const createdOn = today.toISOString().slice(0, 10);
+	const createdOn = parseUtils.formatSQLiteDateTime(today);
 	const updatedOn = createdOn;
 
 	const frontMatter = {
@@ -154,7 +154,7 @@ async function updateNode(collectionName, nodeId, updateData, content) {
 		const newContent = content ?? parseUtils.extractProperties(text);
 
 		// Merge the updateData with existing front matter
-		const updatedOn = new Date().toISOString().slice(0, 10);
+		const updatedOn = parseUtils.formatSQLiteDateTime(new Date());
 		const updatedFrontMatter = {
 			...frontMatter,
 			...updateData,

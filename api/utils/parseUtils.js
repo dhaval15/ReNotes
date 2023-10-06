@@ -1,3 +1,14 @@
+// Function to convert the local date time to sqlite format
+function formatSQLiteDateTime(date) {
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const seconds = date.getSeconds().toString().padStart(2, '0');
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
 // Function to create slug
 function generateSlug(title, date) {
   const timestamp = date.toISOString().replace(/[-T:Z.]/g, '').slice(0, 14);
@@ -20,9 +31,14 @@ function extractProperties(text) {
     const frontMatter = {};
 
     for (const line of frontMatterLines) {
-      const [key, value] = line.split(':').map((str) => str.trim());
-			if (value != '')
-      	frontMatter[key] = value;
+			firstIndex = line.indexOf(':');
+			if (firstIndex !== -1) {
+				const key = line.substring(0, firstIndex).trim();
+				const value = line.substring(firstIndex + 1).trim();
+				if (value != '') {
+					frontMatter[key] = value;
+				}
+			}
     }
 
     return frontMatter;
@@ -76,6 +92,8 @@ function extractLinks(from, content) {
 }
 
 module.exports = {
+	formatSQLiteDateTime,
+	generateSlug,
 	extractProperties,
 	extractContent,
 	serializeProperties,
