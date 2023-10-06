@@ -11,7 +11,12 @@ export const fetchNodeAsync = createAsyncThunk('editNode/fetchNote', async (payl
   return response;
 });
 
-export const updateNoteAsync = createAsyncThunk('editNote/updateNote', async (_, thunkApi) => {
+export const saveContentAsync = createAsyncThunk('editNote/saveContent', async (_, thunkApi) => {
+	const state = thunkApi.getState().editNote;
+	if (state.content == null)
+		throw 'Already upto date';
+	const response = await api.updateNode(state.node.collection, state.node.id, state.content, {});
+	return response;
 });
 
 const editNoteSlice = createSlice({
@@ -29,12 +34,16 @@ const editNoteSlice = createSlice({
 		clearMessage: (state, action) => {
 			state.message = null;
 		},
+		clearAlert: (state, action) => {
+			state.message = null;
+		},
 		clear: (state, action) => {
 			if (state.content == null) {
-				state.note = null;
+				state.node = null;
 				state.content = null;
 				localStorage.setItem('editorContent', null);
 				state.message = null;
+				state.alert = null;
 				action.payload();
 			}
 			else {
@@ -55,22 +64,25 @@ const editNoteSlice = createSlice({
         state.status = 'failed';
         state.message = action.error.message;
       })
-      .addCase(updateNoteAsync.pending, (state) => {
+      .addCase(saveContentAsync.pending, (state) => {
         state.status = 'pending';
       })
-      .addCase(updateNoteAsync.fulfilled, (state, action) => {
+      .addCase(saveContentAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
+				state.node = action.payload;
+				state.content = null;
       })
-      .addCase(updateNoteAsync.rejected, (state, action) => {
+      .addCase(saveContentAsync.rejected, (state, action) => {
         state.status = 'failed';
-        state.message = action.error.message;
+        state.alert = action.error.message;
       })
 	},
 });
 
 export const {
 	setContent,
-	clearMessage,
+	clearAlert,
+	saveContent,
 	clear,
 } = editNoteSlice.actions;
 

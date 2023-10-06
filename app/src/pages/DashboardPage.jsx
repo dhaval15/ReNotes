@@ -58,7 +58,7 @@ function CollectionList() {
 					{collection}
 				</Text>
 			))}
-			<CreateCollectionDialog/>
+			<CreateCollectionDialog />
 		</VStack>
 	);
 }
@@ -118,7 +118,7 @@ function MainView({ isOpen }) {
 					onClick={() => dispatch(openDrawer(!isOpen))}
 					mr={4}
 				/>
-				<InputGroup minWidth="20em" maxWidth="30em">
+				<InputGroup maxWidth="30em">
 					<Input
 						value={search}
 						onChange={(event) => setSearch(event.target.value.trim())}
@@ -127,8 +127,8 @@ function MainView({ isOpen }) {
 						<Icon type="search" onClick={() => { }} />
 					</InputRightElement>
 				</InputGroup>
-				<Spacer />
-				<CreateNodeDialog/>
+				<Spacer mr={4}/>
+				<CreateNodeDialog />
 			</Flex>
 			<VStack
 				mt="1em"
@@ -169,10 +169,8 @@ function DashboardPage() {
 				<CollectionSidebar isOpen={isOpen}
 				/>
 			) : (
-				<>
-					<CollectionsDrawer isOpen={isOpen}
-					/>
-				</>
+				<CollectionsDrawer isOpen={isOpen}
+				/>
 			)}
 			<Flex ml={isWideScreen && isOpen ? 300 : 0} p={0} overflowY="auto">
 				<MainView isOpen={isOpen} />

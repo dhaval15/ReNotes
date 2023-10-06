@@ -9,7 +9,7 @@ import debounce from 'lodash/debounce';
 
 const MemoMde = React.memo(SimpleMdeReact);
 
-const Editor = ({ initialContent, onSave }) => {
+const Editor = ({ initialContent, onChangeDebounced, onSave }) => {
 	const dialogRef = useRef(null);
 	useEffect(() => {
 		console.log(dialogRef.current);
@@ -20,18 +20,19 @@ const Editor = ({ initialContent, onSave }) => {
 			<EditorArea 
 				dialogRef={dialogRef} 
 				onSave={onSave}
+				onChangeDebounced={onChangeDebounced} 
 				initialContent={initialContent}/>
 		</>
 	)
 }
 
-function EditorArea({ dialogRef, initialContent, onSave }) {
+function EditorArea({ dialogRef, initialContent, onChangeDebounced, onSave}) {
 	const editor = useRef(null);
 	const TYPING_INTERVAL = 2000;
 
 	const debouncedSave = React.useRef(
 		debounce((text) => {
-			onSave(text);
+			onChangeDebounced(text);
 		}, TYPING_INTERVAL)
 	).current;
 
@@ -62,7 +63,7 @@ function EditorArea({ dialogRef, initialContent, onSave }) {
 	return (
 		<>
 			<Flex height="100vh" direction="column">
-				<MdToolbar height="8em" editor={editor} />
+				<MdToolbar height="8em" editor={editor} onSave={onSave}/>
 				<Flex
 					flex={1}
 					style={{

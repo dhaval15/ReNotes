@@ -86,9 +86,12 @@ const rightIcons = [
 	},
 ];
 
-const MdToolbar = ({ editor }) => {
+const MdToolbar = ({ editor, onSave }) => {
   const handleButtonClick = (action) => {
 		if(action == 'toggleFullScreen') {
+		}
+		else if (action == 'save') {
+			onSave();
 		}
 		else if (editor.current && editor.current.cm && editor.current.mde) {
       editor.current.cm.focus();
