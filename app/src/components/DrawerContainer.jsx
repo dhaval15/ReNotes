@@ -99,6 +99,7 @@ function DrawerContainer({ left = true, body, side, header }) {
 					onOpen={onOpen}
 					onClose={onClose}
 					body={body}
+					left={left}
 					header={header} />
 			</Stack>
 		</Box>
