@@ -42,16 +42,6 @@ const collectionsSlice = createSlice({
 		error: null,
 		selected: null,
 		loaded: false,
-		isDrawerOpen: false,
-		isWideScreen: false,
-	},
-	reducers: {
-		openDrawer: (state, action) => {
-			state.isDrawerOpen = action.payload;
-		},
-		setWideScreen: (state, action) => {
-			state.isWideScreen = action.payload;
-		},
 	},
   extraReducers: (builder) => {
     builder
@@ -74,9 +64,6 @@ const collectionsSlice = createSlice({
       .addCase(fetchCollectionAsync.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.selected = action.payload;
-				if (!state.isWideScreen) {
-					state.isDrawerOpen = false
-				}
       })
       .addCase(fetchCollectionAsync.rejected, (state, action) => {
         state.status = 'failed';
@@ -97,10 +84,5 @@ const collectionsSlice = createSlice({
       });
   },
 });
-
-export const {
-	openDrawer,
-	setWideScreen,
-} = collectionsSlice.actions;
 
 export default collectionsSlice.reducer;
