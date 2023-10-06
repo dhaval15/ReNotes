@@ -153,8 +153,10 @@ async function updateNode(collectionName, nodeId, updateData, content) {
 		const frontMatter = parseUtils.extractProperties(text);
 		const newContent = content ?? parseUtils.extractProperties(text);
 
+		// change updateOn only when there is content update
+		const updatedOn = content != null ? parseUtils.formatSQLiteDateTime(new Date()): frontMatter['updatedOn'];
+
 		// Merge the updateData with existing front matter
-		const updatedOn = parseUtils.formatSQLiteDateTime(new Date());
 		const updatedFrontMatter = {
 			...frontMatter,
 			...updateData,
