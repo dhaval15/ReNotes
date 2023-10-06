@@ -106,6 +106,10 @@ class IndexDB {
 		});
 	}
 
+	async selectLinks(query) {
+		return this.queryDatabase(query);
+	}
+
 	async linksWhere(where) {
 		const selectLinksQuery = `SELECT * FROM links WHERE ${where}`;
 		return this.queryDatabase(selectLinksQuery);

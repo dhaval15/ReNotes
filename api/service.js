@@ -71,8 +71,18 @@ async function getNode(collectionName, nodeId) {
 		const nodePath = path.join(rootDir, collectionName, `${node.file}`);
 		const text = await fs.readFile(nodePath, 'utf-8');
 		const content = parseUtils.extractContent(text);
-		const incoming = await indexDb.linksWhere(`collection = '${collectionName}' AND target = '${nodeId}'`);
-		const outgoing = await indexDb.linksWhere(`collection = '${collectionName}' AND source = '${nodeId}'`);
+		const incomingQuery = `SELECT links.*, nodes.title AS title
+FROM links
+INNER JOIN nodes ON links.source = nodes.id
+WHERE links.collection =  '${collectionName}'
+		AND links.target = '${nodeId}';`;
+		const incoming = await indexDb.selectLinks(incomingQuery);
+		const outgoingQuery = `SELECT links.*, nodes.title AS title
+FROM links
+INNER JOIN nodes ON links.target = nodes.id
+WHERE links.collection =  '${collectionName}'
+		AND links.source = '${nodeId}';`;
+		const outgoing = await indexDb.selectLinks(outgoingQuery);
 		return {
 			... node,
 			content,
@@ -80,6 +90,7 @@ async function getNode(collectionName, nodeId) {
 			outgoing,
 		}
 	} catch (err) {
+		console.log(err);
 		throw err;
 	}
 }
