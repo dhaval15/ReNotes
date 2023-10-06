@@ -143,7 +143,7 @@ async function deleteNode(collectionName, nodeId) {
 }
 
 // Function to update a node by ID
-async function updateNode(collectionName, nodeId, updateData, content) {
+async function updateNode(collectionName, nodeId, content, updatedData) {
 	const nodes = await indexDb.nodesWhere(`collection = '${collectionName}' AND id = '${nodeId}'`);
 	const node = nodes[0];
 	const nodePath = path.join(rootDir, collectionName, node.file);
@@ -151,7 +151,7 @@ async function updateNode(collectionName, nodeId, updateData, content) {
 	try {
 		const text = await fs.readFile(nodePath, 'utf-8');
 		const frontMatter = parseUtils.extractProperties(text);
-		const newContent = content ?? parseUtils.extractProperties(text);
+		const newContent = content ?? parseUtils.extractContent(text);
 
 		// change updateOn only when there is content update
 		const updatedOn = content != null ? parseUtils.formatSQLiteDateTime(new Date()): frontMatter['updatedOn'];
@@ -159,7 +159,7 @@ async function updateNode(collectionName, nodeId, updateData, content) {
 		// Merge the updateData with existing front matter
 		const updatedFrontMatter = {
 			...frontMatter,
-			...updateData,
+			...updatedData,
 			updatedOn,
 		};
 		const updatedYamlFrontMatter = parseUtils.serializeProperties(updatedFrontMatter);
@@ -168,7 +168,12 @@ async function updateNode(collectionName, nodeId, updateData, content) {
 		// Write the updated content back to the file
 		await fs.writeFile(nodePath, nodeContent, 'utf-8');
 
-		return { id: nodeId, ...updatedFrontMatter, content: newContent };
+		return { 
+			id: nodeId,
+			collection: collectionName,
+			...updatedFrontMatter,
+			content: newContent,
+		};
 	} catch (err) {
 		throw err;
 	}

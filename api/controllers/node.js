@@ -43,14 +43,15 @@ const deleteNode = async (req, res) => {
 const updateNode = async (req, res) => {
   const { name, id } = req.params;
   const { content, updatedData } = req.body;
-  if (!title) {
-    return res.status(400).json({ error: 'Title is required' });
+  if (!name || !id) {
+    return res.status(400).json({ error: 'Collection and Id is required' });
   }
 
   try {
     const updatedNode = await service.updateNode(name, id, content, updatedData);
     res.json(updatedNode);
   } catch (err) {
+		console.log(err);
     res.status(500).json({ error: 'Unable to update node' });
   }
 };

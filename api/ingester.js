@@ -26,7 +26,15 @@ function onFileCreatedOrUpdated(indexDB, collection, relativePath) {
 			indexDB.db.run('BEGIN TRANSACTION');
 
 			try {
-				indexDB.createOrUpdateNode(id, collection, title, relativePath, tags, createdOn, updatedOn, extras);
+				indexDB.createOrUpdateNode(
+					id,
+					collection,
+					title,
+					relativePath,
+					tags.join(' '),
+					createdOn,
+					updatedOn,
+					extras);
 
 				indexDB.deleteLinksFrom(id);
 				for (const link of links) {

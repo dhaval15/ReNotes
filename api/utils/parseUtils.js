@@ -36,7 +36,12 @@ function extractProperties(text) {
 				const key = line.substring(0, firstIndex).trim();
 				const value = line.substring(firstIndex + 1).trim();
 				if (value != '') {
-					frontMatter[key] = value;
+					if (key == 'tags'){
+						frontMatter[key] = value.split(' ');
+					}
+					else{
+						frontMatter[key] = value;
+					}
 				}
 			}
     }
