@@ -5,6 +5,7 @@ import {
 	InputRightElement,
 	Spacer,
 	VStack,
+	HStack,
 	Text,
 	Heading,
 } from '@chakra-ui/react';
@@ -33,9 +34,13 @@ function CollectionList() {
 			align="start"
 			alignItems="stretch"
 		>
-			<Heading size="md" p={4}>
-				Collections
-			</Heading>
+			<HStack>
+				<Heading size="md" p={4}>
+					Collections
+				</Heading>
+				<Spacer/>
+				<CreateCollectionDialog mr={4}/>
+			</HStack>
 			{collections.map(collection => (
 				<Text
 					key={collection}
@@ -50,17 +55,16 @@ function CollectionList() {
 					{collection}
 				</Text>
 			))}
-			<CreateCollectionDialog />
 		</VStack>
 	);
 }
 
 function DashboardPage() {
- 	const dispatch = useDispatch();
+	const dispatch = useDispatch();
 	const [search, setSearch] = useState('');
 	const selected = useSelector((state) => state.collections.selected);
 	const [filteredNodes, setFilteredNodes] = useState(null);
- 	const loaded = useSelector((state) => state.collections.loaded);
+	const loaded = useSelector((state) => state.collections.loaded);
 	useEffect(() => {
 		if (search == '') {
 			setFilteredNodes(null);
@@ -87,7 +91,7 @@ function DashboardPage() {
 							<Icon type="search" onClick={() => { }} />
 						</InputRightElement>
 					</InputGroup>
-					<Spacer mr={4}/>
+					<Spacer mr={4} />
 					<CreateNodeDialog />
 				</>
 			}
@@ -106,7 +110,7 @@ function DashboardPage() {
 						))}
 					</VStack>
 				</VStack>}
-			side={<CollectionList pt={4}/>}
+			side={<CollectionList pt={4} />}
 			left={true}
 			sticky={true}
 		/>

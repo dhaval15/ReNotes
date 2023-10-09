@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import {
 	useDisclosure,
+	Box,
 	Input,
-	Flex,
 	Button,
+	IconButton,
 	Modal,
 	ModalBody,
 	ModalCloseButton,
@@ -12,6 +13,7 @@ import {
 	ModalHeader,
 	ModalOverlay
 } from '@chakra-ui/react';
+import Icon from '@oovui/react-feather-icons';
 import { useDispatch } from 'react-redux';
 import { createCollectionAsync } from '../reducers/collectionsReducer';
 
@@ -28,8 +30,11 @@ export default function CreateCollectionDialog() {
 	};
 
 	return (
-		<Flex alignItems="center">
-			<Button onClick={onOpen}>Create</Button>
+		<Box>
+			<IconButton
+				icon={<Icon type='plus' />}
+				onClick={onOpen}
+			/>
 			<Modal isOpen={isOpen} onClose={onClose}>
 				<ModalOverlay />
 				<ModalContent>
@@ -50,6 +55,6 @@ export default function CreateCollectionDialog() {
 					</ModalFooter>
 				</ModalContent>
 			</Modal>
-		</Flex>
+		</Box>
 	);
 }
