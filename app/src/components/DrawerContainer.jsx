@@ -40,9 +40,7 @@ function DrawerX({ isOpen, onClose, side, left }) {
 			<DrawerOverlay>
 				<DrawerContent>
 					<DrawerCloseButton />
-					<DrawerBody>
-						{side}
-					</DrawerBody>
+					{side}
 				</DrawerContent>
 			</DrawerOverlay>
 		</Drawer>
@@ -57,7 +55,7 @@ function MainView({ isOpen, onOpen, onClose, left, sticky, body, header }) {
 	return (
 		<Stack
 			{...stickyProps}
-			mx="0.5em" p={4} 
+			mx="12px" p={4} 
 			alignItems="center" 
 			width="100%"
 			maxWidth="700px">
