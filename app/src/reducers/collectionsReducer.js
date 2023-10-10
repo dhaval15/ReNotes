@@ -79,8 +79,11 @@ const collectionsSlice = createSlice({
 				};
       })
       .addCase(deleteCollectionAsync.fulfilled, (state, action) => {
-        const deletedId = action.payload;
-        state.data = state.data.filter((collection) => collection.id !== deletedId); 
+        const deleted = action.payload;
+        state.data = state.data.filter((collection) => collection !== deleted); 
+				if (state.selected.name === deleted) {
+					state.selected = null;
+				}
       });
   },
 });

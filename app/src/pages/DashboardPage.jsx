@@ -46,7 +46,7 @@ function CollectionList() {
 				<CollectionTile
 					collection={collection}
 					onClick={() => selectCollection(collection)}
-					isSelected={collection === selected.name}
+					isSelected={selected && collection === selected.name}
 				/>
 			))}
 		</VStack>
