@@ -126,7 +126,7 @@ function OverView() {
 function filterOutgoingLinks(links) {
 	const uniqueLinks = new Set();
 	return links.filter((link) => {
-		const linkKey = `${link.source}_${link.target}_${link.inline}`;
+		const linkKey = `${link.target}_${link.inline}`;
 		if (!uniqueLinks.has(linkKey)) {
 			uniqueLinks.add(linkKey);
 			return true;
@@ -138,7 +138,7 @@ function filterOutgoingLinks(links) {
 function filterIncomingLinks(links) {
 	const uniqueLinks = new Set();
 	return links.filter((link) => {
-		const linkKey = `${link.source}_${link.target}`;
+		const linkKey = `${link.source}`;
 		if (!uniqueLinks.has(linkKey)) {
 			uniqueLinks.add(linkKey);
 			return true;
