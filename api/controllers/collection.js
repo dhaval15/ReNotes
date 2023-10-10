@@ -33,7 +33,7 @@ const deleteCollection = async (req, res) => {
 
   try {
     await service.deleteCollection(name, drop);
-    res.status(204).send(); // No content on success
+    res.status(204).send(); 
   } catch (err) {
     res.status(500).json({ error: 'Unable to delete collection' });
   }

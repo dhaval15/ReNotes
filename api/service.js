@@ -44,8 +44,9 @@ async function deleteCollection(collectionName, drop) {
 				}
 			}
 		}
-		await fs.rmdir(collectionPath);
+		await fs.rmdir(collectionPath, {recursive: true});
 	} catch (err) {
+		console.log(err);
 		throw err;
 	}
 }
