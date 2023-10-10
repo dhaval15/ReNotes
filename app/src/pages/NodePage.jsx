@@ -7,7 +7,6 @@ import {
 	Flex,
 	IconButton,
 	Spacer,
-	HStack,
 	Button,
 	Box,
 	Link as ChakraLink,
@@ -21,13 +20,20 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchNodeAsync } from '../reducers/nodeReducer';
 import './markdown.css';
-import LinkComponent from '../components/LinkComponent';
 import DrawerContainer from '../components/DrawerContainer';
 
 function NodePage() {
 	const { collection, id } = useParams();
 	const dispatch = useDispatch();
 	const node = useSelector((state) => state.node.node);
+
+	const urlTransform = (key, url, node) => {
+		if (key.startsWith('id:')) {
+			const id = key.substring(3);
+			return `#/${collection}/${id}`;
+		}
+		return key;
+	}
 
 	const navigate = useNavigate();
 
@@ -65,7 +71,7 @@ function NodePage() {
 			}
 			body={
 				<VStack width="100%" align="start" className="markdown">
-					<ReactMarkdown>{node.content}</ReactMarkdown>
+					<ReactMarkdown urlTransform={urlTransform}>{node.content}</ReactMarkdown>
 				</VStack>}
 			side={<OverView pt={4} />}
 			left={false}
