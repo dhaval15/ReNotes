@@ -15,7 +15,7 @@ A zettle-kasten based markdown note-taking that you can selfhost.
 
 ```sh
 docker build . -t renotes/renotes
-sudo docker-compose up -d
+docker-compose up -d
 ```
 
 ### Screenshots
