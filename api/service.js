@@ -211,6 +211,55 @@ async function regenerateIndex(name) {
 	}
 }
 
+// ------------- Content Service ---------------//
+
+// Function to get content
+async function getContent(collectionName, nodeId) {
+	try {
+		const nodes = await indexDb.nodesWhere(`collection = '${collectionName}' AND id = '${nodeId}'`);
+		const node = nodes[0];
+		const nodePath = path.join(rootDir, collectionName, `${node.file}`);
+		const text = await fs.readFile(nodePath, 'utf-8');
+		const content = parseUtils.extractContent(text);
+		return {
+			content
+		}
+	} catch (err) {
+		console.log(err);
+		throw err;
+	}
+}
+
+// Function to post content
+async function postContent(collectionName, nodeId, content) {
+	const nodes = await indexDb.nodesWhere(`collection = '${collectionName}' AND id = '${nodeId}'`);
+	const node = nodes[0];
+	const nodePath = path.join(rootDir, collectionName, node.file);
+
+	try {
+		const text = await fs.readFile(nodePath, 'utf-8');
+		const frontMatter = parseUtils.extractProperties(text);
+
+		const updatedOn = parseUtils.formatSQLiteDateTime(new Date());
+
+		// Merge the updateData with existing front matter
+		const updatedFrontMatter = {
+			...frontMatter,
+			...updatedData,
+			updatedOn,
+		};
+		const updatedYamlFrontMatter = parseUtils.serializeProperties(updatedFrontMatter);
+		const nodeContent = updatedYamlFrontMatter + `${content}\n`;
+
+		// Write the updated content back to the file
+		await fs.writeFile(nodePath, nodeContent, 'utf-8');
+
+		return;
+	} catch (err) {
+		throw err;
+	}
+}
+
 module.exports = {
 	getAllCollections,
 	createCollection,
@@ -221,5 +270,7 @@ module.exports = {
 	createNode,
 	deleteNode,
 	updateNode,
+	getContent,
+	postContent,
 };
 

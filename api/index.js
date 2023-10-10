@@ -28,6 +28,11 @@ app.post('/api/collection/:name/node', nodeController.createNode);
 app.put('/api/collection/:name/node/:id', nodeController.updateNode);
 app.delete('/api/collection/:name/node/:id', nodeController.deleteNode);
 
+const contentController = require('./controllers/content');
+
+app.get('/api/content/:name/node/:id', contentController.getContent);
+app.post('/api/content/:name/node', contentController.postContent);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
 	next(createError(404));
