@@ -65,6 +65,7 @@ function EditorArea({ dialogRef, initialContent, onChangeDebounced, onSave}) {
 			<Flex height="100vh" direction="column">
 				<MdToolbar height="8em" editor={editor} onSave={onSave}/>
 				<Flex
+					id="editor"
 					flex={1}
 					style={{
 						justifyContent: "center",

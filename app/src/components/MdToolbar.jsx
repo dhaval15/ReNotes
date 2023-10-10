@@ -89,6 +89,7 @@ const rightIcons = [
 const MdToolbar = ({ editor, onSave }) => {
   const handleButtonClick = (action) => {
 		if(action == 'toggleFullScreen') {
+			document.getElementById("editor").requestFullscreen();
 		}
 		else if (action == 'save') {
 			onSave();
