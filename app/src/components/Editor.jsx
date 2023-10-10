@@ -75,8 +75,7 @@ function EditorArea({ dialogRef, initialContent, onChangeDebounced, onSave}) {
 						height: "100%",
 						overflowY: 'auto',
 					}}
-					px="0em"
-					pb={8}>
+					px="0em">
 					<MemoMde
 						style={{
 							height: '100%',

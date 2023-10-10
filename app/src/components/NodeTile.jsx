@@ -10,6 +10,7 @@ const NodeTile = ({ node }) => {
 	return (
 		<VStack
 			key={node.id}
+			gap="0.1em"
 			align="start">
 			<Link
 				to={`/${node.collection}/${node.id}`}
@@ -30,7 +31,7 @@ const NodeTile = ({ node }) => {
 
 const Tag = ({ tag }) => {
 	return (
-		<Text key={tag} fontSize="14"> #{tag} </Text>
+		<Text key={tag} fontSize="14" fontWeight="600"> #{tag} </Text>
 	)
 }
 
