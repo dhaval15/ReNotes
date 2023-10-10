@@ -20,6 +20,7 @@ import {
 import CreateCollectionDialog from '../components/CreateCollectionDialog';
 import CreateNodeDialog from '../components/CreateNodeDialog';
 import DrawerContainer from '../components/DrawerContainer';
+import CollectionTile from '../components/CollectionTile';
 
 function CollectionList() {
 	const dispatch = useDispatch();
@@ -42,18 +43,11 @@ function CollectionList() {
 				<CreateCollectionDialog mr={4}/>
 			</HStack>
 			{collections.map(collection => (
-				<Text
-					key={collection}
-					fontSize={20}
-					fontWeight="semibold"
+				<CollectionTile
+					collection={collection}
 					onClick={() => selectCollection(collection)}
-					cursor="pointer"
-					backgroundColor={collection === selected.name ? 'gray.200' : 'transparent'}
-					py={2}
-					px={4}
-				>
-					{collection}
-				</Text>
+					isSelected={collection === selected.name}
+				/>
 			))}
 		</VStack>
 	);
