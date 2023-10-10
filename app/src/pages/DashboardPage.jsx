@@ -36,11 +36,10 @@ function CollectionList() {
 			alignItems="stretch"
 		>
 			<HStack>
-				<Heading size="md" p={4}>
+				<Heading size="md" py={4} pl={4} pr={2}>
 					Collections
 				</Heading>
-				<Spacer/>
-				<CreateCollectionDialog mr={4}/>
+				<CreateCollectionDialog/>
 			</HStack>
 			{collections.map(collection => (
 				<CollectionTile

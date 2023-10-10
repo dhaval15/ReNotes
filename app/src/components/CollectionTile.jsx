@@ -44,6 +44,7 @@ function CollectionTile({ collection, isSelected, onClick }) {
 				<MenuButton
 					as={IconButton}
 					variant="ghost"
+					size="sm"
 					onClick={(event) => { event.stopPropagation(); }}
 					icon={<Icon type="more-vertical" />}
 				/>

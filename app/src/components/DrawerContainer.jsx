@@ -39,7 +39,6 @@ function DrawerX({ isOpen, onClose, side, left }) {
 		<Drawer placement={left ? "left" : "right"} onClose={onClose} isOpen={isOpen}>
 			<DrawerOverlay>
 				<DrawerContent>
-					<DrawerCloseButton />
 					{side}
 				</DrawerContent>
 			</DrawerOverlay>

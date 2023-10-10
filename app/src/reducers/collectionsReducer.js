@@ -29,6 +29,12 @@ export const createNodeAsync = createAsyncThunk('collection/createNode', async (
   return response;
 });
 
+export const deleteNodeAsync = createAsyncThunk('collection/deleteNode', async (payload) => {
+  await api.deleteNode(payload.collection, payload.nodeId);
+  return payload;
+});
+
+
 export const deleteCollectionAsync = createAsyncThunk('collection/deleteCollection', async (payload) => {
   await api.deleteCollection(payload.name, payload.drop);
   return payload.name;
@@ -84,6 +90,13 @@ const collectionsSlice = createSlice({
 				if (state.selected.name === deleted) {
 					state.selected = null;
 				}
+      })
+      .addCase(deleteNodeAsync.fulfilled, (state, action) => {
+        const deleted = action.payload;
+        state.selected = {
+					... state.selected,
+					nodes: state.selected.nodes.filter((node) => node.id !== deleted.nodeId),
+				}; 
       });
   },
 });

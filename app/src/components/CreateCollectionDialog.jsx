@@ -16,6 +16,7 @@ import {
 import Icon from '@oovui/react-feather-icons';
 import { useDispatch } from 'react-redux';
 import { createCollectionAsync } from '../reducers/collectionsReducer';
+import TinyIconButton from './TinyIconButton';
 
 export default function CreateCollectionDialog() {
 	const dispatch = useDispatch();
@@ -36,8 +37,8 @@ export default function CreateCollectionDialog() {
 
 	return (
 		<Box>
-			<IconButton
-				icon={<Icon type='plus' />}
+			<TinyIconButton
+				type='plus'
 				onClick={onOpen}
 			/>
 			<Modal isOpen={isOpen} onClose={onCloseDialog}>

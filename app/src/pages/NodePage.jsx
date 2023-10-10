@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import {
 	VStack,
+	HStack,
 	Heading,
 	Text,
 	Flex,
@@ -22,7 +23,9 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchNodeAsync } from '../reducers/nodeReducer';
 import './markdown.css';
+import TinyIconButton from '../components/TinyIconButton';
 import DrawerContainer from '../components/DrawerContainer';
+import { deleteNodeAsync } from '../reducers/collectionsReducer';
 
 function NodePage() {
 	const { collection, id } = useParams();
@@ -82,14 +85,35 @@ function NodePage() {
 }
 
 function OverView() {
-	const outgoing = useSelector((state) => state.node.node.outgoing);
-	const incoming = useSelector((state) => state.node.node.incoming);
-	const collection = useSelector((state) => state.node.node.collection);
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const node = useSelector((state) => state.node.node);
+	const outgoing = node.outgoing;
+	const incoming = node.incoming;
+	const collection = node.collection;
 
 	const filteredIncoming = filterIncomingLinks(incoming);
 	const filteredOutgoing = mapOutgoingLinks(outgoing);
+
+	const deleteNode = () => {
+		dispatch(deleteNodeAsync({
+			nodeId: node.id,
+			collection: collection,
+		}));
+		navigate(-1);
+	};
+
+	const editNode = () => {
+
+	};
+
 	return (
 		<VStack alignItems="start" p={4}>
+			<HStack width="100%">
+				<Spacer/>
+				<TinyIconButton type="trash-2" onClick={deleteNode}/>
+				<TinyIconButton type="edit-2" onClick={editNode}/>
+			</HStack>
 			{filteredOutgoing.length !== 0 &&
 				(<Box p="4">
 					<Text fontSize="lg" fontWeight="bold" mb="4">
