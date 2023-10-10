@@ -6,9 +6,17 @@ A zettle-kasten based markdown note-taking that you can selfhost.
 
 - [x] Collections
 - [x] Live Markdown Editing
+- [ ] Authentication
+- [ ] Public collections
 - [ ] Deep Searching
 - [ ] Graph
-- [ ] Neovim Plugin
+
+### Self Host
+
+```sh
+docker build . -t renotes/renotes
+sudo docker-compose up -d
+```
 
 ### Screenshots
 

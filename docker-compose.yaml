@@ -1,12 +1,13 @@
 services:
   renotes:
-    image: docker_image
+    image: renotes/renotes
     container_name: renotes
     restart: unless-stopped
     ports:
       - 3030:3030
     volumes:
-      - ${directory_for_your_notes}:/data
+      - ${RENOTES_DIRECTORY}:/data
+      # Change the renotes directory to where you want to keep your data
     environment:
       - PUID=1000
       - PGID=1000
