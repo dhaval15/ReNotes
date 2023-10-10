@@ -10,6 +10,8 @@ import {
 	Button,
 	Box,
 	Link as ChakraLink,
+	UnorderedList,
+	ListItem,
 } from '@chakra-ui/react';
 import ReactMarkdown from 'react-markdown';
 import Icon from '@oovui/react-feather-icons';
@@ -85,54 +87,71 @@ function OverView() {
 	const collection = useSelector((state) => state.node.node.collection);
 
 	const filteredIncoming = filterIncomingLinks(incoming);
-	const filteredOutgoing = filterOutgoingLinks(outgoing);
-
+	const filteredOutgoing = mapOutgoingLinks(outgoing);
 	return (
-		<VStack>
-			<Box p="4">
-				<Text fontSize="lg" fontWeight="bold" mb="4">
-					Outgoing
-				</Text>
-				<Flex flexDirection="column">
-					{filteredOutgoing.map((link, index) => (
-						<ChakraLink
-							key={index}
-							href={`/#/${collection}/${link.target}`}
-							rel="noopener noreferrer">
-							{link.inline} ({link.title})
-						</ChakraLink>
-					))}
-				</Flex>
-			</Box>
-			<Box p="4">
-				<Text fontSize="lg" fontWeight="bold" mb="4">
-					Incoming
-				</Text>
-				<Flex flexDirection="column">
-					{filteredIncoming.map((link, index) => (
-						<ChakraLink
-							key={index}
-							href={`/#/${collection}/${link.source}`}
-							rel="noopener noreferrer">
-							{link.title}
-						</ChakraLink>
-					))}
-				</Flex>
-			</Box>
+		<VStack alignItems="start" p={4}>
+			{filteredOutgoing.length !== 0 &&
+				(<Box p="4">
+					<Text fontSize="lg" fontWeight="bold" mb="4">
+						Outgoing
+					</Text>
+					<Flex flexDirection="column">
+						{filteredOutgoing.map((link, index) => (
+							<Flex
+								key={index}
+								flexDirection="column">
+								<ChakraLink
+									href={`/#/${collection}/${link.target}`}
+									rel="noopener noreferrer">
+									{link.title}
+								</ChakraLink>
+								<UnorderedList ml={4}>
+									{link.inline.map((i, _) => (<ListItem>{i}</ListItem>))}
+								</UnorderedList>
+							</Flex>
+						))}
+					</Flex>
+				</Box>)}
+			{filteredIncoming.length !== 0 &&
+				(<Box p="4">
+					<Text fontSize="lg" fontWeight="bold" mb="4">
+						Incoming
+					</Text>
+					<Flex flexDirection="column">
+						{filteredIncoming.map((link, index) => (
+							<ChakraLink
+								key={index}
+								href={`/#/${collection}/${link.source}`}
+								rel="noopener noreferrer">
+								{link.title}
+							</ChakraLink>
+						))}
+					</Flex>
+				</Box>)}
 		</VStack>
 	)
 }
 
-function filterOutgoingLinks(links) {
-	const uniqueLinks = new Set();
-	return links.filter((link) => {
-		const linkKey = `${link.target}_${link.inline}`;
-		if (!uniqueLinks.has(linkKey)) {
-			uniqueLinks.add(linkKey);
-			return true;
+function mapOutgoingLinks(links) {
+	const mergedLinks = new Map();
+
+	for (const link of links) {
+		const { target, inline } = link;
+
+		if (mergedLinks.has(target)) {
+			const mergedLink = mergedLinks.get(target);
+			if (!mergedLink.inline.includes(inline)) {
+				mergedLink.inline.push(inline);
+			}
+		} else {
+			mergedLinks.set(target, {
+				...link,
+				inline: [inline],
+			});
 		}
-		return false;
-	});
+	}
+
+	return Array.from(mergedLinks.values());
 }
 
 function filterIncomingLinks(links) {
