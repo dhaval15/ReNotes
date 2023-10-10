@@ -11,9 +11,6 @@ const MemoMde = React.memo(SimpleMdeReact);
 
 const Editor = ({ initialContent, onChangeDebounced, onSave }) => {
 	const dialogRef = useRef(null);
-	useEffect(() => {
-		console.log(dialogRef.current);
-	},[dialogRef.current]);
 	return (
 		<>
 			<SelectNodeDialog dialogRef={dialogRef}/>
@@ -49,12 +46,13 @@ function EditorArea({ dialogRef, initialContent, onChangeDebounced, onSave}) {
 	const extraKeys = React.useMemo(() => {
 		return {
 			'Ctrl-F': async (cm) => {
-				console.log(dialogRef);
 				const node = await dialogRef.current.openAsync();
-				const selection = cm.getSelection().trim();
-				const inline = selection != '' ? selection : node.title;
-				const url = `[${inline}](id:${node.id})`;
-				cm.replaceSelection(url);
+				if (node) {
+					const selection = cm.getSelection().trim();
+					const inline = selection != '' ? selection : node.title;
+					const url = `[${inline}](id:${node.id})`;
+					cm.replaceSelection(url);
+				}
 			},
 		};
 	}, []);

@@ -4,7 +4,6 @@ import {
 	Button,
 	IconButton,
 	Input,
-	Textarea,
 	Modal,
 	ModalBody,
 	ModalCloseButton,
@@ -23,6 +22,12 @@ const CreateNodeDialog = () => {
 	const [title, setTitle] = useState('');
 	const [tags, setTags] = useState('');
 
+	const onCloseDialog = () => {
+		setTitle('');
+		setTags('');
+		onClose();
+	};
+
 	const handleCreateNode = () => {
 		const tagsArray = tags.split(' ').filter((tag) => tag !== ''); // Remove empty tags
 
@@ -31,7 +36,7 @@ const CreateNodeDialog = () => {
 				title: title,
 				tags: tagsArray,
 			}));
-			onClose(); // Close the dialog
+			onCloseDialog(); // Close the dialog
 		}
 	};
 
@@ -41,7 +46,7 @@ const CreateNodeDialog = () => {
 				icon={<Icon type='plus' />}
 				onClick={onOpen}
 			/>
-			<Modal isOpen={isOpen} onClose={onClose}>
+			<Modal isOpen={isOpen} onClose={onCloseDialog}>
 				<ModalOverlay />
 				<ModalContent>
 					<ModalHeader>Create a Node</ModalHeader>
@@ -62,10 +67,10 @@ const CreateNodeDialog = () => {
 					</ModalBody>
 
 					<ModalFooter>
-						<Button onClick={handleCreateNode} colorScheme="blue">
+						<Button onClick={handleCreateNode} colorScheme="blue" mr={4}>
 							Create
 						</Button>
-						<Button ml={4} onClick={onClose}>Cancel</Button>
+						<Button ml={4} onClick={onCloseDialog}>Cancel</Button>
 					</ModalFooter>
 				</ModalContent>
 			</Modal>

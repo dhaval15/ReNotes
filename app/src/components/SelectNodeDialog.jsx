@@ -31,8 +31,17 @@ export default function SelectNodeDialog({dialogRef}) {
 	const [filteredNodes, setFilteredNodes] = useState([]);
 	const nodes = useSelector((state) => state.collections.selected.nodes);
 
+	const onCloseDialog = () => {
+		setSearchText('');
+		onClose();
+	};
+
+
 	useEffect(() => {
 		// Filter nodes based on the search text
+		if (searchText == '') {
+			setFilteredNodes(nodes);
+		}
 		const filtered = nodes.filter((node) =>
 			node.title.toLowerCase().includes(searchText.toLowerCase())
 		);
@@ -51,7 +60,7 @@ export default function SelectNodeDialog({dialogRef}) {
 				isOpen={isOpen}
 				onClose={() => {
 					resolver(null);
-					onClose();
+					onCloseDialog();
 				}}
 				size="lg">
 				<ModalOverlay />
@@ -73,7 +82,7 @@ export default function SelectNodeDialog({dialogRef}) {
 										key={node.id}
 										onClick={() => {
 											resolver(node);
-											onClose();
+											onCloseDialog();
 										}}
 										width="100%"
 										textAlign="left"

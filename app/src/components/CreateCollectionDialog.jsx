@@ -22,10 +22,15 @@ export default function CreateCollectionDialog() {
 	const [name, setName] = useState('');
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
+	const onCloseDialog = () => {
+		setName('');
+		onClose();
+	};
+
 	const handleCreateCollection = () => {
 		if (name.length > 4) {
 			dispatch(createCollectionAsync(name));
-			onClose();
+			onCloseDialog();
 		}
 	};
 
@@ -35,7 +40,7 @@ export default function CreateCollectionDialog() {
 				icon={<Icon type='plus' />}
 				onClick={onOpen}
 			/>
-			<Modal isOpen={isOpen} onClose={onClose}>
+			<Modal isOpen={isOpen} onClose={onCloseDialog}>
 				<ModalOverlay />
 				<ModalContent>
 					<ModalHeader>Create a Collection</ModalHeader>
@@ -48,10 +53,10 @@ export default function CreateCollectionDialog() {
 					</ModalBody>
 
 					<ModalFooter>
-						<Button onClick={handleCreateCollection} colorScheme="blue">
+						<Button onClick={handleCreateCollection} colorScheme="blue" mr={4}>
 							Create
 						</Button>
-						<Button onClick={onClose}>Cancel</Button>
+						<Button onClick={onCloseDialog}>Cancel</Button>
 					</ModalFooter>
 				</ModalContent>
 			</Modal>
