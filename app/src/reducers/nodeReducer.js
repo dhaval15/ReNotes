@@ -5,9 +5,8 @@ import {
 } from '@reduxjs/toolkit';
 import ReNotesApi from '../api/ReNotesApi'; 
 
-const api = new ReNotesApi('/api'); 
-
-export const fetchNodeAsync = createAsyncThunk('node/fetchNote', async (payload) => {
+export const fetchNodeAsync = createAsyncThunk('node/fetchNote', async (payload, thunkApi) => {
+	const api = new ReNotesApi(thunkApi.getState().auth.token);
   const response = await api.getNode(payload.collection, payload.id);
   return response;
 });

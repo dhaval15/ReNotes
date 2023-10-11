@@ -6,7 +6,7 @@ A zettle-kasten based markdown note-taking that you can selfhost.
 
 - [x] Collections
 - [x] Live Markdown Editing
-- [ ] Authentication
+- [x] Authentication
 - [ ] Public collections
 - [ ] Deep Searching
 - [ ] Graph

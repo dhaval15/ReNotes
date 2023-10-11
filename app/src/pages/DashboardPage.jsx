@@ -6,8 +6,8 @@ import {
 	Spacer,
 	VStack,
 	HStack,
-	Text,
 	Heading,
+	Button,
 } from '@chakra-ui/react';
 import '../App.css';
 import Icon from '@oovui/react-feather-icons';
@@ -17,6 +17,7 @@ import {
 	fetchCollectionAsync,
 	fetchCollectionsAsync,
 } from '../reducers/collectionsReducer';
+import { logout } from '../reducers/authReducer';
 import CreateCollectionDialog from '../components/CreateCollectionDialog';
 import CreateNodeDialog from '../components/CreateNodeDialog';
 import DrawerContainer from '../components/DrawerContainer';
@@ -34,6 +35,7 @@ function CollectionList() {
 		<VStack
 			align="start"
 			alignItems="stretch"
+			height="100%"
 		>
 			<HStack>
 				<Heading size="md" py={4} pl={4} pr={2}>
@@ -48,6 +50,10 @@ function CollectionList() {
 					isSelected={selected && collection === selected.name}
 				/>
 			))}
+			<Spacer/>
+			<Button onClick={() => dispatch(logout())} variant="ghost" borderRadius={0}>
+				Logout
+			</Button>
 		</VStack>
 	);
 }

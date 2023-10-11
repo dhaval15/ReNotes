@@ -1,10 +1,17 @@
 require('./file-watcher');
 var createError = require('http-errors');
 var express = require('express');
+var session = require('express-session');
 var logger = require('morgan');
 var cors = require('cors');
 
 var app = express();
+
+app.use(session({
+	secret: 'b3865a296b9a7c08229e959e0a5cbc0b564e887971b8d11b880162bdcc17bf82',
+	resave: false,
+  saveUninitialized: true,
+}))
 
 app.use(cors());
 app.use(logger('dev'));
@@ -12,6 +19,17 @@ app.use(express.json());
 app.use(express.static('/static'))
 
 var port = process.env.PORT || '3030';
+
+const authenticationController = require('./controllers/authentication');
+
+app.use((req, res, next) => {
+	if (req.path === '/api/login') {
+    return next(); 
+  }
+	return authenticationController.authenticationMiddleware(req, res, next);
+});
+
+app.post('/api/login', authenticationController.login);
 
 const collectionController = require('./controllers/collection');
 
@@ -30,8 +48,8 @@ app.delete('/api/collection/:name/node/:id', nodeController.deleteNode);
 
 const contentController = require('./controllers/content');
 
-app.get('/api/content/:name/node/:id', contentController.getContent);
-app.post('/api/content/:name/node', contentController.postContent);
+app.get('/api/content/:collection/:node', contentController.getContent);
+app.post('/api/content/:collection/:node', contentController.postContent);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

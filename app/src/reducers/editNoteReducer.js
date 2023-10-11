@@ -4,14 +4,14 @@ import {
 } from '@reduxjs/toolkit';
 import ReNotesApi from '../api/ReNotesApi'; 
 
-const api = new ReNotesApi('/api');
-
-export const fetchNodeAsync = createAsyncThunk('editNode/fetchNote', async (payload) => {
+export const fetchNodeAsync = createAsyncThunk('editNode/fetchNote', async (payload, thunkApi) => {
+	const api = new ReNotesApi(thunkApi.getState().auth.token);
   const response = await api.getNode(payload.collection, payload.id);
   return response;
 });
 
 export const saveContentAsync = createAsyncThunk('editNote/saveContent', async (_, thunkApi) => {
+	const api = new ReNotesApi(thunkApi.getState().auth.token);
 	const state = thunkApi.getState().editNote;
 	if (state.content == null)
 		throw 'Already upto date';

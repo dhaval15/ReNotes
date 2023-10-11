@@ -1,4 +1,5 @@
 import { configureStore, getDefaultMiddleware, applyMiddleware } from '@reduxjs/toolkit';
+import authReducer from './reducers/authReducer';
 import collectionsReducer from './reducers/collectionsReducer';
 import nodeReducer from './reducers/nodeReducer';
 import editNoteReducer from './reducers/editNoteReducer';
@@ -12,6 +13,7 @@ const logger = store => next => action => {
 
 const store = configureStore({
   reducer: {
+		auth: authReducer,
     collections: collectionsReducer,
     editNote: editNoteReducer,
     node: nodeReducer,

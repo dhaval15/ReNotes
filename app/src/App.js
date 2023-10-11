@@ -7,26 +7,42 @@ import { Provider } from 'react-redux';
 import store from './store';
 
 import {
-  createMemoryRouter,
-  createHashRouter,
-  RouterProvider,
+	createMemoryRouter,
+	createHashRouter,
+	RouterProvider,
 } from "react-router-dom";
+import LoginPage from './pages/LoginPage';
+import AuthProvider from './components/AuthProvider';
 
 const router = createHashRouter([
-  { path: "/", Component: DashboardPage },
-  { path: "/:collection/:id", Component: NodePage },
-  { path: "/:collection/:id/edit", Component: EditNotePage },
+	{
+		path: '/login',
+		element: <LoginPage />,
+	},
+	{
+		index: '/',
+		element: <AuthProvider><DashboardPage /></AuthProvider>,
+	},
+	{
+		path: '/:collection/:id',
+		element: <AuthProvider><NodePage /></AuthProvider>,
+	},
+	{
+		path: '/:collection/:id/edit',
+		element: <AuthProvider> <EditNotePage /> </AuthProvider>,
+	},
 ]);
 
 
 function App() {
-  return (
+
+	return (
 		<ChakraProvider>
 			<Provider store={store}>
 				<RouterProvider router={router} />
 			</Provider>
 		</ChakraProvider>
-  );
+	);
 }
 
 export default App;
