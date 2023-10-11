@@ -6,8 +6,11 @@ services:
     ports:
       - 3030:3030
     volumes:
-      - ${RENOTES_DIRECTORY}:/data
+      - /directory/to/data:/data
       # Change the renotes directory to where you want to keep your data
     environment:
+      - RENOTES_USERNAME= #username (default is renotes)
+      - RENOTES_PASSWORD=password #password (default is password)
+      - AUTH_SECRET= #SECRET KEY HERE
       - PUID=1000
       - PGID=1000

@@ -15,7 +15,6 @@
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "express-json": "^1.0.0",
-    "express-session": "^1.17.3",
     "framer-motion": "^10.16.1",
     "glob": "^10.3.3",
     "http-errors": "~1.6.3",

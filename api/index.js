@@ -1,17 +1,10 @@
 require('./file-watcher');
 var createError = require('http-errors');
 var express = require('express');
-var session = require('express-session');
 var logger = require('morgan');
 var cors = require('cors');
 
 var app = express();
-
-app.use(session({
-	secret: 'b3865a296b9a7c08229e959e0a5cbc0b564e887971b8d11b880162bdcc17bf82',
-	resave: false,
-  saveUninitialized: true,
-}))
 
 app.use(cors());
 app.use(logger('dev'));
