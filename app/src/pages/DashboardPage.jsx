@@ -65,11 +65,12 @@ function DashboardPage() {
 	const [filteredNodes, setFilteredNodes] = useState(null);
 	const loaded = useSelector((state) => state.collections.loaded);
 	useEffect(() => {
-		if (search == '') {
+		const query = search.trim();
+		if (query == '') {
 			setFilteredNodes(null);
 		}
 		else {
-			const regexp = new RegExp(search, 'i')
+			const regexp = new RegExp(query, 'i')
 			setFilteredNodes(selected.nodes.filter((node) => regexp.test(node.title)));
 		}
 	}, [search]);
@@ -84,7 +85,7 @@ function DashboardPage() {
 					<InputGroup maxWidth="30em">
 						<Input
 							value={search}
-							onChange={(event) => setSearch(event.target.value.trim())}
+							onChange={(event) => setSearch(event.target.value)}
 							variant='filled' placeholder='Search' onCh />
 						<InputRightElement width='4rem'>
 							<Icon type="search" onClick={() => { }} />
