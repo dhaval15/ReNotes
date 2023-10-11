@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
 	VStack,
-	Box,
+	Text,
 	Spacer,
 	Heading,
 	Input,
@@ -39,9 +39,17 @@ function LoginPage() {
 			<VStack height="100%">
 				<Spacer />
 				<VStack p={8} bg="gray.50" borderRadius={4}>
-					<Heading as="h2" size="lg" mb={4}>
-						ReNotes
-					</Heading>
+					<VStack alignItems="start" gap={0} mb={4} width="100%">
+						<Heading as="h2" size="lg" fontFamily="Lora">
+							ReNotes
+						</Heading>
+						<Text
+							fontFamily="Lora"
+							fontSize={14}
+							letterSpacing={4} pl="2px">
+							LINK YOUR NOTES
+						</Text>
+					</VStack>
 					<FormControl id="username" isRequired mb={4}>
 						<FormLabel>Username</FormLabel>
 						<Input type="text" name="username" variant="filled" value={formData.username} onChange={handleInputChange} />
@@ -50,7 +58,7 @@ function LoginPage() {
 						<FormLabel>Password</FormLabel>
 						<Input type="password" name="password" variant="filled" value={formData.password} onChange={handleInputChange} />
 					</FormControl>
-					<Button colorScheme="blue" onClick={handleLogin}>
+					<Button colorScheme="teal" onClick={handleLogin}>
 						Login
 					</Button>
 				</VStack>
