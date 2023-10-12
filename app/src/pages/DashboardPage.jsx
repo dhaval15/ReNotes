@@ -106,7 +106,7 @@ function DashboardPage() {
 						spacing={4}
 					>
 						{(filteredNodes ?? selected?.nodes ?? []).map(node => (
-							<NodeTile node={node} />
+							<NodeTile key={node.id} node={node} />
 						))}
 					</VStack>
 				</VStack>}
