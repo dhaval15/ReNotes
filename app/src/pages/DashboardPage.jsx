@@ -8,6 +8,7 @@ import {
 	HStack,
 	Heading,
 	Button,
+	IconButton,
 } from '@chakra-ui/react';
 import '../App.css';
 import Icon from '@oovui/react-feather-icons';
@@ -22,6 +23,7 @@ import CreateCollectionDialog from '../components/CreateCollectionDialog';
 import CreateNodeDialog from '../components/CreateNodeDialog';
 import DrawerContainer from '../components/DrawerContainer';
 import CollectionTile from '../components/CollectionTile';
+import TagsFilterDialog from '../components/TagsFilterDialog';
 
 function CollectionList() {
 	const dispatch = useDispatch();
@@ -41,7 +43,7 @@ function CollectionList() {
 				<Heading size="md" py={4} pl={4} pr={2}>
 					Collections
 				</Heading>
-				<CreateCollectionDialog/>
+				<CreateCollectionDialog />
 			</HStack>
 			{collections.map(collection => (
 				<CollectionTile
@@ -50,7 +52,7 @@ function CollectionList() {
 					isSelected={selected && collection === selected.name}
 				/>
 			))}
-			<Spacer/>
+			<Spacer />
 			<Button onClick={() => dispatch(logout())} variant="ghost" borderRadius={0}>
 				Logout
 			</Button>
@@ -64,16 +66,41 @@ function DashboardPage() {
 	const selected = useSelector((state) => state.collections.selected);
 	const [filteredNodes, setFilteredNodes] = useState(null);
 	const loaded = useSelector((state) => state.collections.loaded);
+	const [isTagsFilterVisible, setTagsFilterVisible] = useState(false);
+	const [selectedTags, setSelectedTags] = useState([]);
+
+	const onTagsSelected = (tags) => {
+		setSelectedTags(tags);
+	};
+
+	useEffect(() => {
+		if (selected) {
+			for (let i = 0; i < selected.nodes.length; i++) {
+				const node = selected.nodes[i];
+				if (new Set(node.tags).size !== node.tags.length) {
+					console.log(node.tags);
+					console.log(new Set(node.tags));
+				}
+			}
+		}
+	}, [selected]);
+
 	useEffect(() => {
 		const query = search.trim();
-		if (query == '') {
-			setFilteredNodes(null);
-		}
-		else {
+		if (selected == null)
+			return;
+		var filteredNodes = selected.nodes;
+		if (query != '') {
 			const regexp = new RegExp(query, 'i')
-			setFilteredNodes(selected.nodes.filter((node) => regexp.test(node.title)));
+			filteredNodes = filteredNodes.filter((node) => regexp.test(node.title));
 		}
-	}, [search]);
+		if (selectedTags.length > 0) {
+			filteredNodes = filteredNodes.filter((node) => {
+				return node.tags.some((tag) => selectedTags.includes(tag));
+			});
+		}
+		setFilteredNodes(filteredNodes);
+	}, [search, selectedTags]);
 	useEffect(() => {
 		if (!loaded)
 			dispatch(fetchCollectionsAsync());
@@ -86,11 +113,14 @@ function DashboardPage() {
 						<Input
 							value={search}
 							onChange={(event) => setSearch(event.target.value)}
-							variant='filled' placeholder='Search' onCh />
+							variant='filled' placeholder='Search' />
 						<InputRightElement width='4rem'>
 							<Icon type="search" onClick={() => { }} />
 						</InputRightElement>
 					</InputGroup>
+					<TagsFilterDialog
+						tags={selected?.tags ?? []}
+						onTagsSelected={onTagsSelected} />
 					<Spacer mr={4} />
 					<CreateNodeDialog />
 				</>

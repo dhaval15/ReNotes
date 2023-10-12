@@ -55,10 +55,15 @@ async function deleteCollection(collectionName, drop) {
 async function getCollectionByName(name) {
 	const nodes = await indexDb.nodesWhere(`collection = '${name}' ORDER BY updatedOn DESC`)
 	const links = await indexDb.linksWhere(`collection = '${name}'`);
+	const tags = nodes.reduce((acc, node) => {
+		return acc.concat(node.tags)
+	}, []);
+	const uniqueTags = Array.from(new Set(tags));
 	return {
 		name: name,
 		nodes: nodes,
 		links: links,
+		tags: uniqueTags,
 	};
 }
 
