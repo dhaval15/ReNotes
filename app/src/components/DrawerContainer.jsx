@@ -5,8 +5,6 @@ import {
 	Drawer,
 	DrawerContent,
 	DrawerOverlay,
-	DrawerCloseButton,
-	DrawerBody,
 	Flex,
 	Stack,
 	IconButton,
@@ -49,7 +47,7 @@ function DrawerX({ isOpen, onClose, side, left }) {
 function MainView({ isOpen, onOpen, onClose, left, sticky, body, header }) {
 	const stickyProps = sticky ? {
 		height: "100vh", 
-		overFlowY: "auto",
+		overflowY: "auto",
 	} : {};
 	return (
 		<Stack
