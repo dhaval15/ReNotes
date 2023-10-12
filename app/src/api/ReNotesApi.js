@@ -24,7 +24,7 @@ class ReNotesApi {
       const data = await response.json();
 			return data;
     } else {
-      console.error('Login failed');
+      throw new Error('Login failed');
     }
 	}
 
