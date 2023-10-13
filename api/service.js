@@ -250,7 +250,6 @@ async function postContent(collectionName, nodeId, content) {
 		// Merge the updateData with existing front matter
 		const updatedFrontMatter = {
 			...frontMatter,
-			...updatedData,
 			updatedOn,
 		};
 		const updatedYamlFrontMatter = parseUtils.serializeProperties(updatedFrontMatter);
@@ -259,8 +258,14 @@ async function postContent(collectionName, nodeId, content) {
 		// Write the updated content back to the file
 		await fs.writeFile(nodePath, nodeContent, 'utf-8');
 
-		return;
+		return { 
+			id: nodeId,
+			collection: collectionName,
+			...updatedFrontMatter,
+			content: content,
+		};
 	} catch (err) {
+		console.log(err);
 		throw err;
 	}
 }
