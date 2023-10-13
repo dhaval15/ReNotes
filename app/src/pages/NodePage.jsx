@@ -26,6 +26,7 @@ import './markdown.css';
 import TinyIconButton from '../components/TinyIconButton';
 import DrawerContainer from '../components/DrawerContainer';
 import { deleteNodeAsync } from '../reducers/collectionsReducer';
+import ExternalEdit from '../components/ExternalEdit';
 
 function NodePage() {
 	const { collection, id } = useParams();
@@ -108,7 +109,7 @@ function OverView() {
 	};
 
 	return (
-		<VStack alignItems="start" p={4}>
+		<VStack alignItems="start" p={4} height="100%">
 			<HStack width="100%">
 				<Spacer/>
 				<TinyIconButton type="trash-2" onClick={deleteNode}/>
@@ -152,6 +153,8 @@ function OverView() {
 						))}
 					</Flex>
 				</Box>)}
+			<Spacer/>
+			<ExternalEdit/>
 		</VStack>
 	)
 }

@@ -13,6 +13,7 @@ import {
 } from "react-router-dom";
 import LoginPage from './pages/LoginPage';
 import AuthProvider from './components/AuthProvider';
+import ExternalPage from './pages/ExternalPage';
 
 const router = createHashRouter([
 	{
@@ -30,6 +31,10 @@ const router = createHashRouter([
 	{
 		path: '/:collection/:id/edit',
 		element: <AuthProvider> <EditNotePage /> </AuthProvider>,
+	},
+	{
+		path: '/external',
+		element: <AuthProvider> <ExternalPage /> </AuthProvider>,
 	},
 ]);
 
