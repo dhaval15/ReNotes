@@ -39,6 +39,7 @@ function TagsFilterDialog({ tags, onTagsSelected }) {
 		<>
 			<IconButton
 				ml={4}
+				variant='none'
 				onClick={() => {
 					if (isOpen) {
 						onCloseDialog();
@@ -47,7 +48,7 @@ function TagsFilterDialog({ tags, onTagsSelected }) {
 						onOpen();
 					}
 				}}>
-				<Icon type="filter" />
+				<Icon type="filter" color={selectedTags.length > 0 ? 'blue' : 'black.50'} />
 			</IconButton>
 			<Modal isOpen={isOpen} onClose={onCloseDialog}>
 				<ModalOverlay />

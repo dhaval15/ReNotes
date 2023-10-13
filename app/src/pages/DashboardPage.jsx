@@ -74,18 +74,6 @@ function DashboardPage() {
 	};
 
 	useEffect(() => {
-		if (selected) {
-			for (let i = 0; i < selected.nodes.length; i++) {
-				const node = selected.nodes[i];
-				if (new Set(node.tags).size !== node.tags.length) {
-					console.log(node.tags);
-					console.log(new Set(node.tags));
-				}
-			}
-		}
-	}, [selected]);
-
-	useEffect(() => {
 		const query = search.trim();
 		if (selected == null)
 			return;
@@ -115,12 +103,11 @@ function DashboardPage() {
 							onChange={(event) => setSearch(event.target.value)}
 							variant='filled' placeholder='Search' />
 						<InputRightElement width='4rem'>
-							<Icon type="search" onClick={() => { }} />
+							<TagsFilterDialog
+								tags={selected?.tags ?? []}
+								onTagsSelected={onTagsSelected} />
 						</InputRightElement>
 					</InputGroup>
-					<TagsFilterDialog
-						tags={selected?.tags ?? []}
-						onTagsSelected={onTagsSelected} />
 					<Spacer mr={4} />
 					<CreateNodeDialog />
 				</>
