@@ -31,6 +31,19 @@ async function createCollection(name) {
 	}
 }
 
+async function updateCollection(name, old) {
+	const collectionPath = path.join(rootDir, name);
+	const oldPath = path.join(rootDir, old);
+
+	try {
+		await fs.rename(oldPath, collectionPath);
+		return { name };
+	} catch (err) {
+		console.log(err);
+		throw err;
+	}
+}
+
 async function deleteCollection(collectionName, drop) {
 	const collectionPath = path.join(rootDir, collectionName);
 
@@ -268,6 +281,7 @@ async function postContent(collectionName, nodeId, content) {
 module.exports = {
 	getAllCollections,
 	createCollection,
+	updateCollection,
 	deleteCollection,
 	getCollectionByName,
 	regenerateIndex,

@@ -48,6 +48,16 @@ class ReNotesApi {
     }
   }
 
+  // POST update a collection
+  async updateCollection(old, data) {
+    try {
+      const response = await this.client.put(`/collection/${old}`, data);
+      return response.data;
+    } catch (error) {
+      throw new Error('Unable to create collection');
+    }
+  }
+
   // DELETE a collection
   async deleteCollection(name, drop) {
     try {

@@ -30,6 +30,7 @@ app.get('/api/collections', collectionController.getCollections);
 app.get('/api/collection/:name', collectionController.getCollection);
 app.delete('/api/collection/:name', collectionController.deleteCollection);
 app.post('/api/collection', collectionController.createCollection);
+app.put('/api/collection/:name', collectionController.updateCollection);
 app.get('/api/regenerate/:name', collectionController.regenerateIndex);
 
 const nodeController = require('./controllers/node');

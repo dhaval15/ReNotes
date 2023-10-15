@@ -26,6 +26,21 @@ const createCollection = async (req, res) => {
   }
 };
 
+// PUT update a collection
+const updateCollection = async (req, res) => {
+  const { name, old } = req.body;
+  if (!name || !old) {
+    return res.status(400).json({ error: 'Collection name is required' });
+  }
+
+  try {
+    const collection = await service.updateCollection(name, old);
+    res.status(201).json(collection);
+  } catch (err) {
+    res.status(500).json({ error: 'Unable to update collection' });
+  }
+};
+
 // DELETE a collection
 const deleteCollection = async (req, res) => {
   const { name } = req.params;
@@ -67,6 +82,7 @@ const regenerateIndex = async (req, res) => {
 module.exports = {
   getCollections,
   createCollection,
+	updateCollection,
   deleteCollection,
   getCollection,
   regenerateIndex,
