@@ -14,7 +14,7 @@ import Icon from '@oovui/react-feather-icons';
 import { useDispatch } from 'react-redux';
 import { deleteCollectionAsync } from '../reducers/collectionsReducer';
 
-function CollectionTile({ collection, isSelected, onClick }) {
+function CollectionTile({ collection, isSelected, onClick, onRename }) {
 	const dispatch = useDispatch();
 	const deleteCollection = (event) => {
 		event.stopPropagation();
@@ -23,6 +23,7 @@ function CollectionTile({ collection, isSelected, onClick }) {
 		}));
 	};
 	const renameCollection = (event) => {
+		onRename();
 		event.stopPropagation();
 	};
 	return (

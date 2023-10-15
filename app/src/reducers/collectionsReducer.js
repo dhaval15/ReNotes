@@ -23,6 +23,13 @@ export const createCollectionAsync = createAsyncThunk('collection/createCollecti
   return name;
 });
 
+export const renameCollectionAsync = createAsyncThunk('collection/renameCollection', async (payload, thunkApi) => {
+	const api = new ReNotesApi(thunkApi.getState().auth.token);
+	console.log(payload);
+  await api.updateCollection(payload.old, payload);
+  return payload;
+});
+
 export const createNodeAsync = createAsyncThunk('collection/createNode', async (payload, thunkApi) => {
 	const api = new ReNotesApi(thunkApi.getState().auth.token);
 	const state = thunkApi.getState().collections;
@@ -81,6 +88,11 @@ const collectionsSlice = createSlice({
       })
       .addCase(createCollectionAsync.fulfilled, (state, action) => {
         state.data = [...state.data, action.payload]; 
+      })
+      .addCase(renameCollectionAsync.fulfilled, (state, action) => {
+				state.status = 'succeeded';
+				const {name, old} = action.payload;
+        state.data = state.data.map((e) => e == old ? name : e); 
       })
       .addCase(createNodeAsync.fulfilled, (state, action) => {
 				state.selected = {

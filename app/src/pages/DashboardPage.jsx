@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
 	Input,
 	InputGroup,
@@ -15,8 +15,10 @@ import Icon from '@oovui/react-feather-icons';
 import NodeTile from '../components/NodeTile';
 import { useSelector, useDispatch } from 'react-redux';
 import {
+	createCollectionAsync,
 	fetchCollectionAsync,
 	fetchCollectionsAsync,
+	renameCollectionAsync,
 } from '../reducers/collectionsReducer';
 import { logout } from '../reducers/authReducer';
 import CreateCollectionDialog from '../components/CreateCollectionDialog';
@@ -24,8 +26,11 @@ import CreateNodeDialog from '../components/CreateNodeDialog';
 import DrawerContainer from '../components/DrawerContainer';
 import CollectionTile from '../components/CollectionTile';
 import TagsFilterDialog from '../components/TagsFilterDialog';
+import EditCollectionDialog from '../components/EditCollectionDialog';
+import TinyIconButton from '../components/TinyIconButton';
 
 function CollectionList() {
+	const dialogRef = useRef(null);
 	const dispatch = useDispatch();
 	const collections = useSelector((state) => state.collections.data);
 	const selected = useSelector((state) => state.collections.selected);
@@ -34,29 +39,47 @@ function CollectionList() {
 		dispatch(fetchCollectionAsync(collection));
 	};
 	return (
-		<VStack
-			align="start"
-			alignItems="stretch"
-			height="100%"
-		>
-			<HStack>
-				<Heading size="md" py={4} pl={4} pr={2}>
-					Collections
-				</Heading>
-				<CreateCollectionDialog />
-			</HStack>
-			{collections.map(collection => (
-				<CollectionTile
-					collection={collection}
-					onClick={() => selectCollection(collection)}
-					isSelected={selected && collection === selected.name}
-				/>
-			))}
-			<Spacer />
-			<Button onClick={() => dispatch(logout())} variant="ghost" borderRadius={0}>
-				Logout
-			</Button>
-		</VStack>
+		<>
+			<EditCollectionDialog dialogRef={dialogRef} />
+			<VStack
+				align="start"
+				alignItems="stretch"
+				height="100%"
+			>
+				<HStack>
+					<Heading size="md" py={4} pl={4} pr={2}>
+						Collections
+					</Heading>
+					<TinyIconButton
+						type='plus'
+						onClick={async () => {
+							const response = await dialogRef.current.openAsync({});
+							if (response)
+								dispatch(createCollectionAsync(response));
+						}}
+					/>
+				</HStack>
+				{collections.map(collection => (
+					<CollectionTile
+						onRename={async () => {
+							const response = await dialogRef.current.openAsync({ old : collection});
+							if (response)
+								dispatch(renameCollectionAsync({
+									name: response,
+									old: collection,
+								}));
+						}}
+						collection={collection}
+						onClick={() => selectCollection(collection)}
+						isSelected={selected && collection === selected.name}
+					/>
+				))}
+				<Spacer />
+				<Button onClick={() => dispatch(logout())} variant="ghost" borderRadius={0}>
+					Logout
+				</Button>
+			</VStack>
+		</>
 	);
 }
 
