@@ -1,77 +1,52 @@
-import { useState, useEffect, useContext, createContext } from 'react';
+import { useState, useEffect } from 'react';
 import {
-	useDisclosure,
 	Input,
-	Modal,
-	ModalBody,
-	ModalCloseButton,
-	ModalContent,
-	ModalHeader,
-	ModalOverlay,
 	VStack,
 	Text,
 } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
+import usePromiseDisclosure, { useGetter } from '../hooks/usePromiseDisclosure';
+import DialogContainer from './DialogContainer';
 
-export default function SelectNodeDialog({dialogRef}) {
-	const { isOpen, onOpen, onClose } = useDisclosure();
-	const [resolver, setResolver] = useState(null);
+export default function SelectNodeDialog({ dialogRef }) {
+	const {
+		isOpen,
+		onClose,
+		params,
+	} = usePromiseDisclosure(dialogRef);
 
-	const openAsync = async () => {
-		onOpen();
-		let resolveFn;
-		const promise = new Promise((resolve, reject) => {
-			resolveFn = resolve;
-		});
-		setResolver(() => resolveFn);
-		return promise;
-	}
+	const [query, setQuery] = useGetter((from) => from?.query, params);
 
-	const [searchText, setSearchText] = useState('');
 	const [filteredNodes, setFilteredNodes] = useState([]);
 	const nodes = useSelector((state) => state.collections.selected.nodes);
 
-	const onCloseDialog = () => {
-		setSearchText('');
-		onClose();
-	};
-
 
 	useEffect(() => {
-		// Filter nodes based on the search text
-		if (searchText == '') {
+		if (query == null || query == '') {
 			setFilteredNodes(nodes);
 		}
-		const filtered = nodes.filter((node) =>
-			node.title.toLowerCase().includes(searchText.toLowerCase())
-		);
-		setFilteredNodes(filtered);
-	}, [searchText, nodes]);
-
-	useEffect(() => {
-		if(dialogRef.current){
-			dialogRef.current.openAsync = openAsync;
+		else {
+			const filtered = nodes.filter((node) =>
+				node.title.toLowerCase().includes(query.toLowerCase())
+			);
+			setFilteredNodes(filtered);
 		}
-	}, [openAsync, dialogRef.current]);
+	}, [query, nodes]);
 
 	return (
 		<div ref={dialogRef}>
-			<Modal
+			<DialogContainer
 				isOpen={isOpen}
 				onClose={() => {
-					resolver(null);
-					onCloseDialog();
+					onClose(null);
 				}}
-				size="lg">
-				<ModalOverlay />
-				<ModalContent>
-					<ModalHeader>Select a Node</ModalHeader>
-					<ModalCloseButton />
-					<ModalBody>
+				title="Select a Node"
+				body={
+					<>
 						<Input
 							placeholder="Search for a node"
-							value={searchText}
-							onChange={(e) => setSearchText(e.target.value)}
+							value={query ?? ''}
+							onChange={(e) => setQuery(e.target.value)}
 						/>
 						<VStack align="start" spacing={2} mt={4}>
 							{filteredNodes.length === 0 ? (
@@ -81,8 +56,7 @@ export default function SelectNodeDialog({dialogRef}) {
 									<Text
 										key={node.id}
 										onClick={() => {
-											resolver(node);
-											onCloseDialog();
+											onClose(node);
 										}}
 										width="100%"
 										textAlign="left"
@@ -92,9 +66,8 @@ export default function SelectNodeDialog({dialogRef}) {
 								))
 							)}
 						</VStack>
-					</ModalBody>
-				</ModalContent>
-			</Modal>
+					</>
+				} />
 		</div>
 	);
 };

@@ -46,7 +46,7 @@ function EditorArea({ dialogRef, initialContent, onChangeDebounced, onSave}) {
 	const extraKeys = React.useMemo(() => {
 		return {
 			'Ctrl-F': async (cm) => {
-				const node = await dialogRef.current.openAsync();
+				const node = await dialogRef.current.openAsync({query: null});
 				if (node) {
 					const selection = cm.getSelection().trim();
 					const inline = selection != '' ? selection : node.title;
