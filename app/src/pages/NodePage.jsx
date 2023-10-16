@@ -1,5 +1,5 @@
 // NotePage.js
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
 	VStack,
 	HStack,
@@ -21,10 +21,11 @@ import {
 	useNavigate,
 } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchNodeAsync } from '../reducers/nodeReducer';
+import { fetchNodeAsync, updateNodeAsync } from '../reducers/nodeReducer';
 import './markdown.css';
 import TinyIconButton from '../components/TinyIconButton';
 import DrawerContainer from '../components/DrawerContainer';
+import EditNodeDialog from '../components/EditNodeDialog';
 import { deleteNodeAsync } from '../reducers/collectionsReducer';
 
 function NodePage() {
@@ -67,7 +68,7 @@ function NodePage() {
 					<Spacer />
 					<Button
 						ml={4}
-						onClick={() => {
+						onClick={async () => {
 							navigate('edit');
 						}}>
 						Edit
@@ -87,7 +88,9 @@ function NodePage() {
 function OverView() {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const dialogRef = useRef(null);
 	const node = useSelector((state) => state.node.node);
+	const allTags = useSelector((state) => state.collections.selected.tags);
 	const outgoing = node.outgoing;
 	const incoming = node.incoming;
 	const collection = node.collection;
@@ -103,16 +106,21 @@ function OverView() {
 		navigate(-1);
 	};
 
-	const editNode = () => {
-
+	const editNode = async () => {
+		const response = await dialogRef.current.openAsync({
+			node: node,
+			allTags: allTags,
+		});
+		dispatch(updateNodeAsync(response));
 	};
 
 	return (
 		<VStack alignItems="start" p={4}>
 			<HStack width="100%">
-				<Spacer/>
-				<TinyIconButton type="trash-2" onClick={deleteNode}/>
-				<TinyIconButton type="edit-2" onClick={editNode}/>
+				<Spacer />
+				<TinyIconButton type="trash-2" onClick={deleteNode} />
+				<TinyIconButton type="edit-2" onClick={editNode} />
+				<EditNodeDialog dialogRef={dialogRef} />
 			</HStack>
 			{filteredOutgoing.length !== 0 &&
 				(<Box p="4">

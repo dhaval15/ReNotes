@@ -16,13 +16,13 @@ import NodeTile from '../components/NodeTile';
 import { useSelector, useDispatch } from 'react-redux';
 import {
 	createCollectionAsync,
+	createNodeAsync,
 	fetchCollectionAsync,
 	fetchCollectionsAsync,
 	renameCollectionAsync,
 } from '../reducers/collectionsReducer';
 import { logout } from '../reducers/authReducer';
-import CreateCollectionDialog from '../components/CreateCollectionDialog';
-import CreateNodeDialog from '../components/CreateNodeDialog';
+import EditNodeDialog from '../components/EditNodeDialog';
 import DrawerContainer from '../components/DrawerContainer';
 import CollectionTile from '../components/CollectionTile';
 import TagsFilterDialog from '../components/TagsFilterDialog';
@@ -62,7 +62,7 @@ function CollectionList() {
 				{collections.map(collection => (
 					<CollectionTile
 						onRename={async () => {
-							const response = await dialogRef.current.openAsync({ old : collection});
+							const response = await dialogRef.current.openAsync({ old: collection });
 							if (response)
 								dispatch(renameCollectionAsync({
 									name: response,
@@ -84,6 +84,7 @@ function CollectionList() {
 }
 
 function DashboardPage() {
+	const dialogRef = useRef(null);
 	const dispatch = useDispatch();
 	const [search, setSearch] = useState('');
 	const selected = useSelector((state) => state.collections.selected);
@@ -132,7 +133,14 @@ function DashboardPage() {
 						</InputRightElement>
 					</InputGroup>
 					<Spacer mr={4} />
-					<CreateNodeDialog />
+					<IconButton
+						icon={<Icon type='plus' />}
+						onClick={async () => {
+							const response = await dialogRef.current.openAsync({ allTags: selected?.tags ?? [] });
+							dispatch(createNodeAsync(response));
+						}}
+					/>
+					<EditNodeDialog dialogRef={dialogRef} />
 				</>
 			}
 			body={
