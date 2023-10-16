@@ -112,7 +112,7 @@ function DashboardPage() {
 			});
 		}
 		setFilteredNodes(filteredNodes);
-	}, [search, selectedTags]);
+	}, [search, selectedTags, selected]);
 	useEffect(() => {
 		if (!loaded)
 			dispatch(fetchCollectionsAsync());
