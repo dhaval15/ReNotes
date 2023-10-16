@@ -21,9 +21,8 @@ const postContent = async (req, res) => {
   }
 
   try {
-    await service.postContent(collection, node, content);
-    res.json(updatedNode);
-    res.status(200).send();
+    const result = await service.postContent(collection, node, content);
+    res.json(result);
   } catch (err) {
     res.status(500).json({ error: 'Unable to update content' });
   }
