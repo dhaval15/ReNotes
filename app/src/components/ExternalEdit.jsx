@@ -8,7 +8,7 @@ function useConfig() {
 	const [config, setConfig] = useState(null);
 
 	useEffect(() => {
-		fetch('/config.json')
+		fetch('/config/editors.json')
 			.then((response) => response.json())
 			.then((data) => {
 				setConfig(data);
@@ -23,6 +23,8 @@ function useConfig() {
 
 export default function ExternalEdit() {
 	const config = useConfig();
+	if (config == null)
+		return null;
 	const navigate = useNavigate();
 	const token = useSelector((state) => state.auth.token);
 	const node = useSelector((state) => state.node.node);
@@ -42,8 +44,6 @@ export default function ExternalEdit() {
 			}
 		});
 	};
-	if (config == null)
-		return null;
 
 	return (
 		<Stack spacing={2}>

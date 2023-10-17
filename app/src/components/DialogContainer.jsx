@@ -20,6 +20,7 @@ export default function DialogContainer({
 			<Modal
 				isOpen={isOpen}
 				onClose={onClose}
+				scrollBehavior="inside"
 				size="lg">
 				<ModalOverlay />
 				<ModalContent>

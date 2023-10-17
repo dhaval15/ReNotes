@@ -16,7 +16,6 @@ export const updateNodeAsync = createAsyncThunk('collection/updateNode', async (
 	const state = thunkApi.getState().node;
 	const node = state.node;
 	const response = await api.updateNode(node.collection, node.id, null, payload);
-	console.log(response);
 	return response;
 });
 

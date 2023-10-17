@@ -13,6 +13,7 @@ import {
 import '../App.css';
 import Icon from '@oovui/react-feather-icons';
 import NodeTile from '../components/NodeTile';
+import { logger } from '../logger';
 import { useSelector, useDispatch } from 'react-redux';
 import {
 	createCollectionAsync,
@@ -36,6 +37,7 @@ function CollectionList() {
 	const selected = useSelector((state) => state.collections.selected);
 
 	const selectCollection = (collection) => {
+		logger.debug(collection);
 		dispatch(fetchCollectionAsync(collection));
 	};
 	return (

@@ -33,7 +33,6 @@ export default function usePromiseDisclosure(ref) {
 
 	useEffect(() => {
 		if(ref.current){
-			console.log(ref.current);
 			ref.current.openAsync = openAsync;
 		}
 	}, [openAsync, ref]);
