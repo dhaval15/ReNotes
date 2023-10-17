@@ -1,4 +1,3 @@
-// NotePage.js
 import React, { useEffect, useRef } from 'react';
 import {
 	VStack,
@@ -29,8 +28,7 @@ import EditNodeDialog from '../components/EditNodeDialog';
 import { deleteNodeAsync } from '../reducers/collectionsReducer';
 import ExternalEdit from '../components/ExternalEdit';
 
-function NodePage() {
-	const { collection, id } = useParams();
+function NodePage({collection, id}) {
 	const dispatch = useDispatch();
 	const node = useSelector((state) => state.node.node);
 
@@ -199,6 +197,11 @@ function filterIncomingLinks(links) {
 		}
 		return false;
 	});
+}
+
+export function NodePageRoute() {
+	const params = useParams();
+	return <NodePage {...params}/>
 }
 
 export default NodePage;

@@ -12,7 +12,7 @@ export default function SelectNodeDialog({ dialogRef }) {
 		params,
 	} = usePromiseDisclosure(dialogRef);
 
-	const nodes = useSelector((state) => state.collections.selected.nodes);
+	const selected = useSelector((state) => state.collections.selected);
 
 	const filter = (node, query) => {
 		return node.title.toLowerCase().includes(query.toLowerCase())
@@ -32,9 +32,9 @@ export default function SelectNodeDialog({ dialogRef }) {
 		<QuickDialog
 			isOpen={isOpen}
 			onClose={onClose}
-			params={params}
+			query={params?.query}
 			dialogRef={dialogRef}
-			items={nodes}
+			items={selected?.nodes ?? []}
 			placeholder="Search for a node"
 			renderItem={renderNode}
 			filter={filter}

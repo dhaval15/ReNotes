@@ -54,9 +54,11 @@ function EditorArea({ dialogRef, initialContent, onChangeDebounced, onSave}) {
 					cm.replaceSelection(url);
 				}
 			},
+			'Ctrl-S': async (cm) => {
+				onSave();
+			},
 		};
 	}, []);
-
 
 	return (
 		<>

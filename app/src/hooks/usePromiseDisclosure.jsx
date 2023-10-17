@@ -26,6 +26,7 @@ export default function usePromiseDisclosure(ref) {
 	},[onOpen, setResolver, setParams]);
 
 	const onCloseDialog = (result) => {
+		setParams(null);
 		onClose();
 		resolver(result);
 	}

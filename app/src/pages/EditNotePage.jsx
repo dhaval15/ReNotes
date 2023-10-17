@@ -11,11 +11,12 @@ import {
 	setContent,
 } from '../reducers/editNoteReducer';
 import { ToastContainer } from '../components/ToastContainer';
+import { useInitStore } from '../reducers/hooks';
 
 
-const EditNotePage = () => {
+export default function EditNotePage({collection, id}) {
+	useInitStore();
 	const dispatch = useDispatch();
-	const { collection, id } = useParams();
 	const node = useSelector((state) => state.editNote.node);
 
 	useEffect(() => {
@@ -48,4 +49,7 @@ const EditNotePage = () => {
 	)
 }
 
-export default EditNotePage
+export function EditNotePageRoute() {
+	const params = useParams();
+	return <EditNotePage {...params}/>
+}

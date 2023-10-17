@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from "react-router-dom";
 import {
 	Input,
 	InputGroup,
@@ -31,6 +32,7 @@ import EditCollectionDialog from '../components/EditCollectionDialog';
 import TinyIconButton from '../components/TinyIconButton';
 
 function CollectionList() {
+	const navigate = useNavigate();
 	const dialogRef = useRef(null);
 	const dispatch = useDispatch();
 	const collections = useSelector((state) => state.collections.data);
@@ -77,6 +79,9 @@ function CollectionList() {
 					/>
 				))}
 				<Spacer />
+				<Button onClick={() => navigate('canvas')} variant="ghost" borderRadius={0}>
+					Open in dev mode
+				</Button>
 				<Button onClick={() => dispatch(logout())} variant="ghost" borderRadius={0}>
 					Logout
 				</Button>

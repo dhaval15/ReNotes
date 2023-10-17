@@ -51,13 +51,10 @@ function InViewItem({ inView, children }) {
 
 function useFilter({
 	items,
-	initialQuery,
 	filter,
 }) {
-
 	const [filtered, setFiltered] = useState(items);
-	const [query, setQuery] = useState(initialQuery ?? '');
-
+	const [query, setQuery] = useState('');
 
 	useEffect(() => {
 		var q = query.trim();
@@ -105,7 +102,7 @@ function useQuickKeys(length, current, onSelected) {
 export default function QuickDialog({
 	isOpen,
 	onClose,
-	params,
+	initialQuery,
 	dialogRef,
 	current,
 	items,
@@ -114,12 +111,11 @@ export default function QuickDialog({
 	onSelected,
 	placeholder,
 }) {
-
 	const {
 		filtered,
 		query,
 		setQuery,
-	} = useFilter({ items, initialQuery: params?.query ?? '', filter });
+	} = useFilter({ items, filter });
 
 	const {
 		onKeyDown,
@@ -129,7 +125,7 @@ export default function QuickDialog({
 		filtered.length,
 		current,
 		(index) => {
-			onSelected(items[index]);
+			onSelected(filtered[index]);
 		},);
 
 	useEffect(() => {
@@ -141,6 +137,9 @@ export default function QuickDialog({
 		}
 	}, [filtered]);
 
+	useEffect(() => {
+		setQuery(initialQuery ?? '');
+	}, [initialQuery]);
 
 	return (
 		<div
@@ -163,7 +162,7 @@ export default function QuickDialog({
 						{(filtered.map((item, index) => {
 							const isSelected = index === selected;
 							return (
-								<InViewItem inView={isSelected}>
+								<InViewItem key={index} inView={isSelected}>
 									{renderItem(item, index, isSelected)}
 								</InViewItem>
 							)
