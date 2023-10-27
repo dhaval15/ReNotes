@@ -1,6 +1,7 @@
-import { Input, VStack } from "@chakra-ui/react";
+import { VStack } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
-import DialogContainer from './DialogContainer';
+import { keyFromEvent } from "../components/KeyGrabber";
+import FlowInput from './FlowInput';
 
 function useInView(ref) {
 	const [intersecting, setIntersecting] = useState(false)
@@ -72,20 +73,25 @@ function useFilter({
 	};
 }
 
-function useQuickKeys(length, current, onSelected) {
+function useQuickKeys(length, current, allowedKeys = [], onSelected) {
 	const [selected, setSelected] = useState(current ?? -1);
 
 	const onKeyDown = (e) => {
-		if (e.key == 'ArrowUp' || (e.key == 'Tab' && e.shiftKey)) {
+		const key = keyFromEvent(e);
+		if (allowedKeys.indexOf(key) !== -1) {
+			onSelected(selected, key);
+			e.preventDefault();
+		}
+		else if (key == 'ArrowUp' || key == 'shift_Tab') {
 			setSelected((prev) => prev == 0 ? 0 : prev - 1);
 			e.preventDefault();
 		}
-		else if (e.key == 'ArrowDown' || e.key == 'Tab') {
+		else if (key == 'ArrowDown' || key == 'Tab') {
 			setSelected((prev) => prev == length - 1 ? prev : prev + 1);
 			e.preventDefault();
 		}
 		else if (e.key == 'Enter') {
-			onSelected(selected);
+			onSelected(selected, null);
 			e.preventDefault();
 		}
 	};
@@ -97,18 +103,17 @@ function useQuickKeys(length, current, onSelected) {
 	};
 }
 
-export default function QuickDialog({
-	isOpen,
-	onClose,
-	initialQuery,
-	dialogRef,
-	current,
-	items,
-	filter,
-	renderItem,
-	onResult,
-	placeholder,
-}) {
+export default function SelectMenu(props) {
+	const {
+		initial,
+		items,
+		filter,
+		renderItem,
+		onNext,
+		placeholder,
+		allowedKeys,
+		...extras
+	} = props;
 	const {
 		filtered,
 		query,
@@ -121,18 +126,14 @@ export default function QuickDialog({
 		setSelected,
 	} = useQuickKeys(
 		filtered.length,
-		current,
-		(index) => {
-			if (index > - 1) {
-				onResult({
-					selection: filtered[index],
-					query: query,
-				});
-			} else if (query.trim() != '') {
-				onResult({
-					query: query,
-				});
-			}
+		-1,
+		allowedKeys,
+		(index, key) => {
+			onNext({
+				key: key,
+				selection: index > -1 ? filtered[index] : null,
+				query: query.trim(),
+			});
 		},);
 
 	useEffect(() => {
@@ -145,37 +146,39 @@ export default function QuickDialog({
 	}, [filtered]);
 
 	useEffect(() => {
-		setQuery(initialQuery ?? '');
-	}, [initialQuery]);
+		setQuery(initial ?? '');
+	}, [initial]);
 
 	return (
-		<div
+		<VStack
+			p={2}
+			style={{
+				height: 'inherit'
+			}}
+			alignItems="stretch"
 			onKeyDown={onKeyDown}
-			ref={dialogRef}>
-			<DialogContainer
-				isOpen={isOpen}
-				onClose={() => {
-					onClose(null);
+			{...extras}>
+			<FlowInput
+				placeholder={placeholder ?? 'Search'}
+				value={query ?? ''}
+				onChange={(e) => setQuery(e.target.value)}
+			/>
+			<VStack
+				style={{
+					overflowY: 'auto',
+					flex: 1,
 				}}
-				title={
-					<Input
-						placeholder={placeholder ?? 'Search'}
-						value={query ?? ''}
-						onChange={(e) => setQuery(e.target.value)}
-					/>
-				}
-				body={
-					<VStack gap={0} alignItems="stretch">
-						{(filtered.map((item, index) => {
-							const isSelected = index === selected;
-							return (
-								<InViewItem key={index} inView={isSelected}>
-									{renderItem(item, index, isSelected)}
-								</InViewItem>
-							)
-						}))}
-					</VStack>
-				} />
-		</div>
+				gap={0}
+				alignItems="stretch">
+				{(filtered.map((item, index) => {
+					const isSelected = index === selected;
+					return (
+						<InViewItem key={index} inView={isSelected}>
+							{renderItem(item, index, isSelected)}
+						</InViewItem>
+					)
+				}))}
+			</VStack>
+		</VStack >
 	)
 }

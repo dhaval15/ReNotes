@@ -31,7 +31,7 @@ function onFileCreatedOrUpdated(indexDB, collection, relativePath) {
 					collection,
 					title,
 					relativePath,
-					tags.join(' '),
+					tags?.join(' ') ?? '',
 					createdOn,
 					updatedOn,
 					extras);

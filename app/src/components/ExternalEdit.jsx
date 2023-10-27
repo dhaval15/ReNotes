@@ -4,7 +4,7 @@ import { Text, Link, Stack } from '@chakra-ui/react';
 import {  useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-function useConfig() {
+export function useConfig() {
 	const [config, setConfig] = useState(null);
 
 	useEffect(() => {
@@ -23,11 +23,11 @@ function useConfig() {
 
 export default function ExternalEdit() {
 	const config = useConfig();
-	if (config == null)
-		return null;
 	const navigate = useNavigate();
 	const token = useSelector((state) => state.auth.token);
 	const node = useSelector((state) => state.node.node);
+	if (config == null)
+		return null;
 
 	const handleNavigate = (editor) => {
 		const urlParams = new URLSearchParams(Object.entries({

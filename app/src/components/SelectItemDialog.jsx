@@ -36,8 +36,8 @@ export default function SelectItemDialog({ dialogRef }) {
 			placeholder="Search"
 			renderItem={renderItem}
 			filter={filter}
-			onSelected={(item) => {
-				onClose(item);
+			onResult={(result) => {
+				onClose(result);
 			}} />
 	);
 };
